@@ -3,7 +3,6 @@ config
 coverage
 .env*
 .vscode
-src/tokens
-yarn.lock
+*.lock
 dist
 tests
