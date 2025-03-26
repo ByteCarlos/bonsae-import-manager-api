@@ -1,52 +1,53 @@
+import { Request, Response } from 'express';
 import Semester from "../models/Semester.js";
 
 export default {
-    async store(req, res) {
+    async store(req: Request, res: Response) {
         try {
             const semester = new Semester(req.body);
             await semester.save();
             return res.status(201).json(semester);
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     },
 
-    async index(req, res) {
+    async index(_req: Request, res: Response) {
         try {
             const semesters = await Semester.find();
             return res.status(200).json(semesters);
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     },
 
-    async show(req, res) {
+    async show(req: Request, res: Response) {
         try {
             const semester = await Semester.findById(req.params.id);
             if (!semester) return res.status(404).json({ error: 'Semester not found' });
             return res.status(200).json(semester);
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     },
 
-    async update(req, res) {
+    async update(req: Request, res: Response) {
         try {
             const semester = await Semester.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!semester) return res.status(404).json({ error: 'Semester not found' });
             return res.status(200).json(semester);
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     },
 
-    async destroy(req, res) {
+    async destroy(req: Request, res: Response) {
         try {
             const semester = await Semester.findByIdAndDelete(req.params.id);
             if (!semester) return res.status(404).json({ error: 'Semester not found' });
             return res.status(200).json({ message: 'Semester deleted successfully' });
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     }
 };

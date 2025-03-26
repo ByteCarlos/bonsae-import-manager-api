@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import Period from '../models/Period.js';
 import Subject from '../models/Subject.js';
 import Class from '../models/Class.js';
@@ -5,17 +6,17 @@ import User from '../models/User.js';
 import Enrollment from '../models/Enrollment.js';
 
 export default {
-    async import(req, res) {
+    async import(req: Request, res: Response) {
         try {
             const { data } = req.body;
 
-            const periods = [];
-            const subjects = [];
-            const classes = [];
-            const users = [];
-            const enrollments = [];
+            const periods: any[] = [];
+            const subjects: any[] = [];
+            const classes: any[] = [];
+            const users: any[] = [];
+            const enrollments: any[] = [];
 
-            data.forEach(row => {
+            data.forEach((row: any) => {
                 switch (row.type) {
                     case 'period':
                         periods.push({ name: row.name });
@@ -50,7 +51,7 @@ export default {
                 enrollments: enrollmentDocs,
             });
         } catch (error) {
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: (error as Error).message });
         }
     }
 };

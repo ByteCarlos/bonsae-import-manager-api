@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+      /* Opções Básicas */
+      "target": "es2020" /* Especifica a versão do ECMAScript: 'ES2020' é uma boa escolha para APIs modernas, com suporte para funcionalidades recentes. */,
+      "module": "ESNext" /* Especifica o formato de módulo como 'commonjs', adequado para Node.js. */,
+      "lib": ["es2020"] /* Especifica os arquivos de biblioteca. 'es2020' é suficiente para a maioria das APIs modernas. */,
+      "allowJs": false /* Desativa a compilação de arquivos JavaScript. A API deve ser inteiramente em TypeScript. */,
+      "declaration": true /* Gera arquivos de declaração '.d.ts' para fornecer tipos ao usar sua API em outros projetos. */,
+      "sourceMap": true /* Gera mapas de origem para facilitar a depuração. */,
+      "outDir": "./dist" /* Redireciona a saída dos arquivos compilados para a pasta 'dist'. */,
+      "rootDir": "./" /* Define o diretório raiz dos arquivos de entrada como 'src', separando o código-fonte da saída. */,
+      "removeComments": true /* Remove comentários no código compilado, mantendo o código gerado mais limpo. */,
+      "strict": true /* Habilita todas as verificações de tipos estritos. Importante para manter a robustez da API. */,
+  
+      /* Verificações Adicionais */
+      "noUnusedLocals": true /* Relatar erros em variáveis locais não utilizadas para evitar código morto. */,
+      "noUnusedParameters": true /* Relatar erros em parâmetros de função não utilizados. */,
+      "noImplicitReturns": true /* Garante que todas as funções retornem um valor ou não retornem nada. Importante para APIs. */,
+      "noFallthroughCasesInSwitch": true /* Previne a queda acidental entre os casos de uma declaração 'switch'. */,
+  
+      /* Resolução de Módulos */
+      "moduleResolution": "node" /* Usado para resolução de módulos em Node.js. */,
+      "esModuleInterop": true /* Habilita interoperabilidade entre CommonJS e ES Modules. */,
+      "resolveJsonModule": true /* Permite a importação de arquivos JSON como módulos. */,
+      "forceConsistentCasingInFileNames": true /* Força a consistência em letras maiúsculas/minúsculas nos nomes de arquivos, útil para evitar problemas em sistemas de arquivos case-sensitive. */,
+  
+      /* Otimização e Performance */
+      "skipLibCheck": true /* Ignora a verificação de tipos em arquivos de definição de bibliotecas para melhorar a performance da compilação. */,
+      "incremental": true /* Habilita compilações incrementais, o que acelera compilações subsequentes. */
+    },
+    "include": ["src", "src/modules.d.ts"] /* Inclui apenas a pasta 'src' no processo de compilação. */,
+    "exclude": ["node_modules", "**/*.test.ts"] /* Exclui a pasta 'node_modules' e arquivos de teste da compilação. */
+  }
+  
