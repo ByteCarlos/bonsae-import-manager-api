@@ -1,23 +1,16 @@
 import mongoose from 'mongoose';
 
 const PeriodSchema = new mongoose.Schema({
-  name: {
+  identifier: {
     type: String,
     required: true,
     unique: true,
     trim: true
   },
-  startDate: {
-    type: Date,
+  schoolTerm: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SchoolTerm',
     required: true
-  },
-  endDate: {
-    type: Date,
-    required: true
-  },
-  isActive: {
-    type: Boolean,
-    default: false
   }
 }, { timestamps: true });
 
