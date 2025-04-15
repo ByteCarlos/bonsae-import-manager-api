@@ -3,6 +3,7 @@ config
 coverage
 .env*
 .vscode
-*.lock
+yarn.lock
+package-lock.json
 dist
 tests

@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 class DB {
+  private maxRetries: number;
+  private retries: number;
+  private mongoUrl: string | undefined;
+  private manualDisconnect: boolean;
+
   constructor() {
     this.maxRetries = 5;
     this.retries = 0;
@@ -16,7 +21,7 @@ class DB {
 
   async connect() {
     try {
-      await mongoose.connect(this.mongoUrl);
+      await mongoose.connect(this.mongoUrl as string);
       console.info('DB - CONEXÃO BEM SUCEDIDA');
       this.retries = 0;
     } catch (err) {
@@ -29,7 +34,7 @@ class DB {
     try {
       this.manualDisconnect = true;
       await mongoose.disconnect();
-    } catch (error) {
+    } catch (error: any) {
       console.error('DB - OCORREU UM ERRO AO DESCONECTAR O MONGODB', error.message);
     }
   }
@@ -39,7 +44,7 @@ class DB {
       try {
         this.retries += 1;
         console.log(`DB - TENTANDO RECONECTAR AO MONGODB... TENTATIVA ${this.retries} DE ${this.maxRetries}`);
-        await mongoose.connect(this.mongoUrl);
+        await mongoose.connect(this.mongoUrl as string);
         console.info('DB - RECONEXÃO BEM-SUCEDIDA COM O MONGODB!');
         this.retries = 0;
         break;

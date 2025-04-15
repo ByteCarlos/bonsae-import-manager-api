@@ -26,3 +26,4 @@ declare module 'node-fetch';
 declare module 'bcrypt';
 declare module 'mongoose';
 declare module 'cors';
+declare module 'cookie-parser';

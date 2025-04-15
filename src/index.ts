@@ -3,7 +3,7 @@ import express from 'express';
 import http from 'http';
 import { createServer } from 'http';
 import routes from './routes/index.js';
-import cors, { CorsOptions } from 'cors';
+import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
 import { DB } from './connection/db.js';
@@ -20,7 +20,7 @@ const server: http.Server = createServer(app);
 // Configuração de CORS
 const whitelist: string[] = ['http://localhost:3005', 'https://entrega-web.netlify.app', 'https://motumbrasil.com'];
 
-const corsOptions: CorsOptions = {
+const corsOptions = {
     origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
         if (whitelist.indexOf(origin as string) !== -1 || !origin) {
             callback(null, true);
