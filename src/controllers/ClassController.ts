@@ -2,6 +2,19 @@ import { Request, Response } from 'express';
 import Class from '../models/Class.js'
 
 export default {
+
+    // Criação de documentos em lote
+    async storeBatch(req: Request, res: Response) {
+        try {
+            const classes = req.body.data.map((classData: any) => new Class(classData));
+            await Class.insertMany(classes);
+            return res.status(201).json(classes);
+        } catch (error) {
+            console.error('Error inserting classes:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
+
     async store(req: Request, res: Response) {
         try {
             const classData = new Class(req.body);

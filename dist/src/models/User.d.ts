@@ -5,39 +5,39 @@ declare const _default: mongoose.Model<{
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     name: string;
     profile: "COORDINATOR" | "TEACHER" | "STUDENT" | "SECRETARY" | "TRAINEE" | "ATTORNEY";
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 }> & {
     name: string;
     profile: "COORDINATOR" | "TEACHER" | "STUDENT" | "SECRETARY" | "TRAINEE" | "ATTORNEY";
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 } & {
     _id: mongoose.Types.ObjectId;
 } & {
@@ -48,39 +48,39 @@ declare const _default: mongoose.Model<{
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     name: string;
     profile: "COORDINATOR" | "TEACHER" | "STUDENT" | "SECRETARY" | "TRAINEE" | "ATTORNEY";
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 }>> & mongoose.FlatRecord<{
     name: string;
     profile: "COORDINATOR" | "TEACHER" | "STUDENT" | "SECRETARY" | "TRAINEE" | "ATTORNEY";
     email: string;
     cpf: string;
     password: string;
-    observations?: string | null | undefined;
     subprofile?: string | null | undefined;
     oabNumber?: string | null | undefined;
     sectionalUFOAB?: string | null | undefined;
     enrollment?: mongoose.Types.ObjectId | null | undefined;
     telephone?: string | null | undefined;
     curricularPeriod?: string | null | undefined;
+    observations?: string | null | undefined;
 }> & {
     _id: mongoose.Types.ObjectId;
 } & {

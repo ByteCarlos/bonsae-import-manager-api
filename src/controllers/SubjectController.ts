@@ -2,6 +2,17 @@ import { Request, Response } from 'express';
 import Subject from "../models/Subject.js";
 
 export default {
+    // Criação de documentos em lote
+    async storeBatch(req: Request, res: Response) {
+        try {
+            const subjects = req.body.data.map((subject: any) => new Subject(subject));
+            await Subject.insertMany(subjects);
+            return res.status(201).json(subjects);
+        } catch (error) {
+            console.error('Error inserting subjects:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
     async store(req: Request, res: Response) {
         try {
             const subject = new Subject(req.body);

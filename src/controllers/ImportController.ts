@@ -1,37 +1,37 @@
 import { Request, Response } from 'express';
 import Period from '../models/Period.js';
-import Subject from '../models/Subject.js';
 import Class from '../models/Class.js';
 import User from '../models/User.js';
 import Enrollment from '../models/Enrollment.js';
+import Subject from '../models/Subject.js';
 
 export default {
     async import(req: Request, res: Response) {
         try {
             const { data } = req.body;
 
-            const periods: any[] = [];
-            const subjects: any[] = [];
-            const classes: any[] = [];
-            const users: any[] = [];
-            const enrollments: any[] = [];
+            let periods: any[] = [];
+            let subjects: any[] = [];
+            let classes: any[] = [];
+            let users: any[] = [];
+            let enrollments: any[] = [];
 
-            data.forEach((row: any) => {
-                switch (row.type) {
+            data.forEach((step: any) => {
+                switch (step.type) {
                     case 'period':
-                        periods.push({ name: row.name });
+                        periods = step.data.map((period: any) => new Period(period));
                         break;
                     case 'subject':
-                        subjects.push({ name: row.name, code: row.code });
+                        subjects = step.data.map((subject: any) => new Subject(subject));
                         break;
                     case 'class':
-                        classes.push({ name: row.name, subjectId: row.subjectId });
+                        classes = step.data.map((classData: any) => new Class(classData));
                         break;
                     case 'user':
-                        users.push({ name: row.name, role: row.role });
+                        users = step.data.map((user: any) => new User(user));
                         break;
                     case 'enrollment':
-                        enrollments.push({ userId: row.userId, classId: row.classId });
+                        enrollments = step.data.map((enrollment: any) => new Enrollment(enrollment));
                         break;
                 }
             });
@@ -55,3 +55,14 @@ export default {
         }
     }
 };
+
+/* 
+O método import foi adaptado para receber dados contendo um array com todas as etapas do fluxo de importação.
+Em cada etapa existem os dados extraidos do csv importado e a identificação do tipo correspondente.
+
+Exemplo de estrutura:
+dados: [
+    { tipo: 'period', dados: [{}, {}, {}] },
+    { tipo: 'subject', dados: [{}, {}, {}] }
+]
+*/

@@ -2,6 +2,19 @@ import { Request, Response } from 'express';
 import Period from '../models/Period.js';
 
 export default {
+
+    // Criação de documentos em lote
+    async storeBatch(req: Request, res: Response) {
+        try {
+            const semesters = req.body.data.map((semester: any) => new Period(semester));
+            await Period.insertMany(semesters);
+            return res.status(201).json(semesters);
+        } catch (error) {
+            console.error('Error inserting semesters:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
+
     async store(req: Request, res: Response) {
         try {
             const semester = new Period(req.body);

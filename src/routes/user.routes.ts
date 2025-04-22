@@ -4,6 +4,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 
 const router = Router();
 
+router.post('/batch', asyncHandler(UserController.storeBatch));
 router.post('/', asyncHandler(UserController.store));
 router.get('/', asyncHandler(UserController.index));
 router.get('/:id', asyncHandler(UserController.show));

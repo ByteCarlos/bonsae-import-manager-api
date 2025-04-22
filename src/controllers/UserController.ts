@@ -2,6 +2,17 @@ import { Request, Response } from 'express';
 import User from "../models/User.js";
 
 export default {
+    // Criação de documentos em lote
+    async storeBatch(req: Request, res: Response) {
+        try {
+            const users = req.body.data.map((user: any) => new User(user));
+            await User.insertMany(users);
+            return res.status(201).json(users);
+        } catch (error) {
+            console.error('Error inserting users:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
     async store(req: Request, res: Response) {
         try {
             const user = new User(req.body);

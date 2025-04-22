@@ -2,6 +2,17 @@ import { Request, Response } from 'express';
 import Enrollment from "../models/Enrollment.js";
 
 export default {
+    // Criação de documentos em lote
+    async storeBatch(req: Request, res: Response) {
+        try {
+            const enrollments = req.body.data.map((enrollment: any) => new Enrollment(enrollment));
+            await Enrollment.insertMany(enrollments);
+            return res.status(201).json(enrollments);
+        } catch (error) {
+            console.error('Error inserting enrollments:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
     async store(req: Request, res: Response) {
         try {
             const enrollment = new Enrollment(req.body);
