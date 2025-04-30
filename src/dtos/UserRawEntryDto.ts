@@ -7,7 +7,7 @@ export enum UserProfile {
     ADVOGADO = 'Advogado(a)'
 }
 
-export interface UserRawEntry {
+export interface UserRawEntryDto {
     profile: UserProfile,
     subprofile?: string,
     name: string,
@@ -22,7 +22,7 @@ export interface UserRawEntry {
     observations?: string
 }
 
-export const toUserRawEntry = (raw: any): UserRawEntry => {
+export const toUserRawEntry = (raw: any): UserRawEntryDto => {
     return {
         profile: raw.profile as UserProfile,
         subprofile: String(raw.subprofile),

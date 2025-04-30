@@ -1,4 +1,4 @@
-export interface SubjectRawEntry {
+export interface SubjectRawEntryDto {
     periodId: number,
     subjectName?: string,
     subjectCode: string,
@@ -10,7 +10,7 @@ export interface SubjectRawEntry {
     campus?: string
 }
 
-export const toSubjectRawEntry = (raw: any): SubjectRawEntry => {
+export const toSubjectRawEntryDto = (raw: any): SubjectRawEntryDto => {
     return {
         periodId: Number(raw.periodId),
         subjectName: raw.subjectName ? String(raw.subjectName) : undefined,

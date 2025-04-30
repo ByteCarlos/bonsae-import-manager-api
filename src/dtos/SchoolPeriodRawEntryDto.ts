@@ -7,17 +7,17 @@ export enum Period {
   SEGUNDO_SEMESTRE_SEGUNDO_BIMESTRE = '2º Semestre - 2º Bimestre',
 }
 
-export interface SchoolPeriodRawEntry {
+export interface SchoolPeriodRawEntryDto {
   code: string,
   name: Period,
   startDate: Date,
   endDate: Date
 }
 
-export const toSchoolPeriodRawEntry = (raw: any): SchoolPeriodRawEntry => {
+export const toSchoolPeriodRawEntryDto = (raw: any): SchoolPeriodRawEntryDto => {
   return {
     code: String(raw.code),
-    name: raw.schoolPeriod as Period,
+    name: raw.name as Period,
     startDate: new Date(raw.startDate),
     endDate: new Date(raw.endDate)
   };

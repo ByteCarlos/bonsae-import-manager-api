@@ -1,26 +1,17 @@
 import { Request, Response } from 'express';
 import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument.js';
-import { SchoolPeriodRawEntry, toSchoolPeriodRawEntry } from '../dtos/SchoolPeriodRawEntryDto.js';
-import { SchoolPeriodEntity } from '../models/entities/SchoolPeriodEntity.js';
-import { AppDataSource } from '../connection/mysqlConnection.js';
+import { FulfillmentService } from '../services/FulfillmentService.js';
+import { SchoolPeriodRawEntryDto, toSchoolPeriodRawEntryDto } from '../dtos/SchoolPeriodRawEntryDto.js';
 
 export default {
 
     async persistSchoolPeriod(req: Request, res: Response) {
-        const schoolPeriodData = req.body.data.map((schoolPeriod: any) => toSchoolPeriodRawEntry(schoolPeriod));
-    
-        const schoolPeriods = schoolPeriodData.map((schoolPeriod: SchoolPeriodRawEntry) => {
-            let sp = new SchoolPeriodEntity();
-            sp.name = schoolPeriod.name;
-            sp.code = schoolPeriod.code;
-            sp.startDate = schoolPeriod.startDate;
-            sp.endDate = schoolPeriod.endDate;
-            return sp;
-        });
-    
         try {
-            const schoolPeriodRepository = AppDataSource.getRepository(SchoolPeriodEntity);
-            await schoolPeriodRepository.save(schoolPeriods);
+            const schoolPeriodData: SchoolPeriodRawEntryDto[] = req.body.schoolPeriods.map((schoolPeriod: any) => toSchoolPeriodRawEntryDto(schoolPeriod));
+            console.log(schoolPeriodData);
+
+            const fs = new FulfillmentService();
+            const schoolPeriods = fs.fulfillRequirements(schoolPeriodData);
     
             return res.status(201).json(schoolPeriods);
         } catch (error) {
