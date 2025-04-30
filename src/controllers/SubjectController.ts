@@ -1,30 +1,7 @@
 import { Request, Response } from 'express';
 import SubjectDocument from '../models/documents/SubjectDocument';
-//import { SubjectRawEntry, toSubjectRawEntry } from '../dtos/SubjectRawEntry.js';
 
 export default {
-    /*async persistSubject(req: Request, res: Response) {
-        const subjectData = req.body.data.map((subject: any) => toSubjectRawEntry(subject));
-    
-        const subject = subjectData.map((subject: SubjectRawEntry) => {
-            let sp = new SchoolPeriodEntity();
-            sp.name = schoolPeriod.name;
-            sp.code = schoolPeriod.code;
-            sp.startDate = schoolPeriod.startDate;
-            sp.endDate = schoolPeriod.endDate;
-            return sp;
-        });
-    
-        try {
-            const schoolPeriodRepository = AppDataSource.getRepository(SchoolPeriodEntity);
-            await schoolPeriodRepository.save(schoolPeriods);
-    
-            return res.status(201).json(schoolPeriods);
-        } catch (error) {
-            console.error('Error inserting school periods:', error);
-            return res.status(500).json({ error: (error as Error).message });
-        }
-    },*/
     async storeBatch(req: Request, res: Response) {
         try {
             const subjects = req.body.map((subject: any) => new SubjectDocument(subject));

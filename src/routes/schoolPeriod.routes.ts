@@ -11,6 +11,4 @@ router.get('/:id', asyncHandler(SchoolPeriodController.show));
 router.put('/:id', asyncHandler(SchoolPeriodController.update));
 router.delete('/:id', asyncHandler(SchoolPeriodController.destroy));
 
-router.post('/persist', asyncHandler(SchoolPeriodController.persistSchoolPeriod))
-
 export default router;

@@ -17,6 +17,7 @@
     "@types/helmet": "^4.0.0",
     "@types/mongoose": "^5.11.97",
     "body-parser": "^1.20.3",
+    "bonsae-import-manager-api": "file:",
     "cassandra-driver": "^4.8.0",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",

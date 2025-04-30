@@ -1,25 +1,7 @@
 import { Request, Response } from 'express';
 import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument.js';
-import { FulfillmentService } from '../services/FulfillmentService.js';
-import { SchoolPeriodRawEntryDto, toSchoolPeriodRawEntryDto } from '../dtos/SchoolPeriodRawEntryDto.js';
 
 export default {
-
-    async persistSchoolPeriod(req: Request, res: Response) {
-        try {
-            const schoolPeriodData: SchoolPeriodRawEntryDto[] = req.body.schoolPeriods.map((schoolPeriod: any) => toSchoolPeriodRawEntryDto(schoolPeriod));
-            console.log(schoolPeriodData);
-
-            const fs = new FulfillmentService();
-            const schoolPeriods = fs.fulfillRequirements(schoolPeriodData);
-    
-            return res.status(201).json(schoolPeriods);
-        } catch (error) {
-            console.error('Error inserting school periods:', error);
-            return res.status(500).json({ error: (error as Error).message });
-        }
-    },
-
     async storeBatch(req: Request, res: Response) {
         try {
             const schoolPeriods = req.body.map((schoolPeriod: any) => new SchoolPeriodDocument(schoolPeriod));

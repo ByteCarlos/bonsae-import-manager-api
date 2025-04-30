@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const SubjectSchema = new mongoose.Schema({
-    periodId: { type: String, required: true },
+    periodCode: { type: String, required: true },
     subjectName: { type: String, required: false },
     subjectCode: { type: String, required: true },
     startDate: { type: Date, required: true },

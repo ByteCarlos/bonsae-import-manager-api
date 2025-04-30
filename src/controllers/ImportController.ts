@@ -5,8 +5,24 @@ import UserDocument from '../models/documents/UserDocument.js';
 import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
 import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
 import SubjectDocument from '../models/documents/SubjectDocument.js';
+import { FulfillmentService } from '../services/FulfillmentService.js';
+import { BundleDto } from '../dtos/BundleDto.js';
 
 export default {
+    async finish(req: Request, res: Response) {
+        try {
+            console.log(req.body.data);
+            const dataBundle: BundleDto = req.body.data;
+            console.log(dataBundle);
+
+            const fulfillmentService = new FulfillmentService();
+            const bundledEntities = await fulfillmentService.fulfillRequirements(dataBundle);
+
+            return res.status(201).json(bundledEntities);
+        } catch (error) {
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },
     async import(req: Request, res: Response) {
         try {
             const { data } = req.body;
