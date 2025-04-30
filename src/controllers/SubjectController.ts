@@ -1,12 +1,34 @@
 import { Request, Response } from 'express';
-import Subject from "../models/Subject.js";
+import SubjectDocument from '../models/documents/SubjectDocument';
+//import { SubjectRawEntry, toSubjectRawEntry } from '../dtos/SubjectRawEntry.js';
 
 export default {
-    // Criação de documentos em lote
+    /*async persistSubject(req: Request, res: Response) {
+        const subjectData = req.body.data.map((subject: any) => toSubjectRawEntry(subject));
+    
+        const subject = subjectData.map((subject: SubjectRawEntry) => {
+            let sp = new SchoolPeriodEntity();
+            sp.name = schoolPeriod.name;
+            sp.code = schoolPeriod.code;
+            sp.startDate = schoolPeriod.startDate;
+            sp.endDate = schoolPeriod.endDate;
+            return sp;
+        });
+    
+        try {
+            const schoolPeriodRepository = AppDataSource.getRepository(SchoolPeriodEntity);
+            await schoolPeriodRepository.save(schoolPeriods);
+    
+            return res.status(201).json(schoolPeriods);
+        } catch (error) {
+            console.error('Error inserting school periods:', error);
+            return res.status(500).json({ error: (error as Error).message });
+        }
+    },*/
     async storeBatch(req: Request, res: Response) {
         try {
-            const subjects = req.body.data.map((subject: any) => new Subject(subject));
-            await Subject.insertMany(subjects);
+            const subjects = req.body.map((subject: any) => new SubjectDocument(subject));
+            await SubjectDocument.insertMany(subjects);
             return res.status(201).json(subjects);
         } catch (error) {
             console.error('Error inserting subjects:', error);
@@ -15,7 +37,7 @@ export default {
     },
     async store(req: Request, res: Response) {
         try {
-            const subject = new Subject(req.body);
+            const subject = new SubjectDocument(req.body);
             await subject.save();
             return res.status(201).json(subject);
         } catch (error) {
@@ -24,7 +46,7 @@ export default {
     },
     async index(_req: Request, res: Response) {
         try {
-            const subjects = await Subject.find();
+            const subjects = await SubjectDocument.find();
             return res.status(200).json(subjects);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
@@ -32,7 +54,7 @@ export default {
     },
     async show(req: Request, res: Response) {
         try {
-            const subject = await Subject.findById(req.params.id);
+            const subject = await SubjectDocument.findById(req.params.id);
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json(subject);
         } catch (error) {
@@ -41,7 +63,7 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const subject = await Subject.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const subject = await SubjectDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json(subject);
         } catch (error) {
@@ -50,7 +72,7 @@ export default {
     },
     async destroy(req: Request, res: Response) {
         try {
-            const subject = await Subject.findByIdAndDelete(req.params.id);
+            const subject = await SubjectDocument.findByIdAndDelete(req.params.id);
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json({ message: 'Subject deleted successfully' });
         } catch (error) {

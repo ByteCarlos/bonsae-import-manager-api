@@ -9,3 +9,15 @@ services:
     ports:
       - "27017:27017"
     restart: always
+
+  mysql-container:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d

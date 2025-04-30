@@ -1,54 +1,62 @@
 import { Request, Response } from 'express';
-import Period from '../models/Period.js';
-import Class from '../models/Class.js';
-import User from '../models/User.js';
-import Enrollment from '../models/Enrollment.js';
-import Subject from '../models/Subject.js';
+import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument.js';
+import ClassDocument from '../models/documents/ClassDocument.js';
+import UserDocument from '../models/documents/UserDocument.js';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
+import SubjectDocument from '../models/documents/SubjectDocument.js';
 
 export default {
     async import(req: Request, res: Response) {
         try {
             const { data } = req.body;
 
-            let periods: any[] = [];
+            let schoolPeriods: any[] = [];
             let subjects: any[] = [];
             let classes: any[] = [];
             let users: any[] = [];
-            let enrollments: any[] = [];
+            let professorEnrollments: any[] =[]
+            let studentEnrollments: any[] =[]
 
             data.forEach((step: any) => {
                 switch (step.type) {
-                    case 'period':
-                        periods = step.data.map((period: any) => new Period(period));
+                    case 'school_period':
+                        schoolPeriods = step.data.map((schoolPeriod: any) => new SchoolPeriodDocument(schoolPeriod));
                         break;
                     case 'subject':
-                        subjects = step.data.map((subject: any) => new Subject(subject));
+                        subjects = step.data.map((subject: any) => new SubjectDocument(subject));
                         break;
                     case 'class':
-                        classes = step.data.map((classData: any) => new Class(classData));
+                        classes = step.data.map((classData: any) => new ClassDocument(classData));
                         break;
                     case 'user':
-                        users = step.data.map((user: any) => new User(user));
+                        users = step.data.map((user: any) => new UserDocument(user));
                         break;
-                    case 'enrollment':
-                        enrollments = step.data.map((enrollment: any) => new Enrollment(enrollment));
+                    case 'professor_enrollment':
+                        professorEnrollments = step.data.map((enrollment: any) => new ProfessorEnrollmentDocument(enrollment));
+                        break;
+                    case 'student_enrollment':
+                        studentEnrollments = step.data.map((enrollment: any) => new StudentEnrollmentDocument(enrollment));
                         break;
                 }
             });
 
-            const periodDocs = periods.length ? await Period.insertMany(periods) : [];
-            const subjectDocs = subjects.length ? await Subject.insertMany(subjects) : [];
-            const classDocs = classes.length ? await Class.insertMany(classes) : [];
-            const userDocs = users.length ? await User.insertMany(users) : [];
-            const enrollmentDocs = enrollments.length ? await Enrollment.insertMany(enrollments) : [];
+            const schoolPeriodsDocs = schoolPeriods.length ? await SchoolPeriodDocument.insertMany(schoolPeriods) : [];
+            const subjectDocs = subjects.length ? await SubjectDocument.insertMany(subjects) : [];
+            const classDocs = classes.length ? await ClassDocument.insertMany(classes) : [];
+            const userDocs = users.length ? await UserDocument.insertMany(users) : [];
+            const professorEnrollmentsDocs = professorEnrollments.length ? await ProfessorEnrollmentDocument.insertMany(professorEnrollments) : [];
+            const studentEnrollmentsDocs = studentEnrollments.length ? await StudentEnrollmentDocument.insertMany(studentEnrollments) : [];
+
 
             return res.status(201).json({
                 message: 'Dados importados com sucesso!',
-                periods: periodDocs,
+                schoolPeriods: schoolPeriodsDocs,
                 subjects: subjectDocs,
                 classes: classDocs,
                 users: userDocs,
-                enrollments: enrollmentDocs,
+                professorEnrollments: professorEnrollmentsDocs,
+                studentEnrollments: studentEnrollmentsDocs
             });
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });

@@ -26,7 +26,9 @@
   
       /* Otimização e Performance */
       "skipLibCheck": true /* Ignora a verificação de tipos em arquivos de definição de bibliotecas para melhorar a performance da compilação. */,
-      "incremental": true /* Habilita compilações incrementais, o que acelera compilações subsequentes. */
+      "incremental": true /* Habilita compilações incrementais, o que acelera compilações subsequentes. */,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
     },
     "include": ["src", "src/modules.d.ts"] /* Inclui apenas a pasta 'src' no processo de compilação. */,
     "exclude": ["node_modules", "**/*.test.ts"] /* Exclui a pasta 'node_modules' e arquivos de teste da compilação. */

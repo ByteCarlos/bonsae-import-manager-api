@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-import Class from '../models/Class.js'
+import ClassDocument from '../models/documents/ClassDocument.js';
 
 export default {
 
-    // Criação de documentos em lote
     async storeBatch(req: Request, res: Response) {
         try {
-            const classes = req.body.data.map((classData: any) => new Class(classData));
-            await Class.insertMany(classes);
+            const classes = req.body.map((classData: any) => new ClassDocument(classData));
+            await ClassDocument.insertMany(classes);
             return res.status(201).json(classes);
         } catch (error) {
             console.error('Error inserting classes:', error);
@@ -17,7 +16,7 @@ export default {
 
     async store(req: Request, res: Response) {
         try {
-            const classData = new Class(req.body);
+            const classData = new ClassDocument(req.body);
             await classData.save();
             return res.status(201).json(classData);
         } catch (error) {
@@ -27,7 +26,7 @@ export default {
 
     async index(_req: Request, res: Response) {
         try {
-            const classes = await Class.find().populate('subject');
+            const classes = await ClassDocument.find().populate('subject');
             return res.status(200).json(classes);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
@@ -36,7 +35,7 @@ export default {
 
     async show(req: Request, res: Response) {
         try { 
-            const classData = await Class.findById(req.params.id);
+            const classData = await ClassDocument.findById(req.params.id);
             if (!classData) return res.status(404).json({ error: 'Class not found' });
             return res.status(200).json(classData);
         } catch (error) {
@@ -46,7 +45,7 @@ export default {
 
     async update(req: Request, res: Response) {
         try {
-            const classData = await Class.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const classData = await ClassDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
             if (!classData) return res.status(404).json({ error: 'Class not found' });
             return res.status(200).json(classData);
         } catch (error) {
@@ -56,7 +55,7 @@ export default {
 
     async destroy(req: Request, res: Response) {
         try {
-            const classData = await Class.findByIdAndDelete(req.params.id);
+            const classData = await ClassDocument.findByIdAndDelete(req.params.id);
             if (!classData) return res.status(404).json({ error: 'Class not found' });
             return res.status(200).json({ message: 'Class deleted successfully' });
         } catch (error) {

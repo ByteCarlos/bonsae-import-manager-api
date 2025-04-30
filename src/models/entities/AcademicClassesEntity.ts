@@ -1,0 +1,61 @@
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { SchoolPeriodEntity } from './SchoolPeriodEntity';
+import { CampusEntity } from './CampusEntity';
+
+@Entity({ name: 'academic_classes' })
+export class AcademicClassesEntity {
+  @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
+  id!: number;
+
+  @ManyToOne(() => SchoolPeriodEntity)
+  @JoinColumn({ name: 'school_period_id' })
+  schoolPeriod!: SchoolPeriodEntity;
+
+  @Column({ type: 'text', nullable: false })
+  name!: string;
+
+  @Column({ type: 'date', name: 'start_date', nullable: false })
+  startDate!: Date;
+
+  @Column({ type: 'date', name: 'end_date', nullable: false })
+  endDate!: Date;
+
+  @Column({ type: 'varchar', length: 100, name: 'category' })
+  category!: string;
+
+  @Column({ type: 'varchar', length: 100, name: 'course' })
+  course!: string;
+
+  @Column({ type: 'boolean', default: true, name: 'active' })
+  active!: boolean;
+
+  @Column({ type: 'boolean', default: false, name: 'is_exceptional' })
+  isExceptional!: boolean;
+
+  @Column({ type: 'varchar', length: 50, name: 'period' })
+  period!: string;
+  
+  @ManyToOne(() => CampusEntity)
+  @JoinColumn({ name: 'campus_id' })
+  campus!: CampusEntity;
+
+  @Column({ type: 'varchar', length: 255, name: 'integration' })
+  integration!: string;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt!: Date;
+
+  @Column({ type: 'timestamp', name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
+}

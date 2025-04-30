@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { UserProfile } from "../../dtos/UserRawEntryDto";
 
 const UserSchema = new mongoose.Schema({
     profile: {
         type: String,
-        enum: ['COORDINATOR', 'TEACHER', 'STUDENT', 'SECRETARY', 'TRAINEE', 'ATTORNEY'],
+        enum: UserProfile,
         required: true
     },
     subprofile: {
@@ -14,11 +15,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    oabNumber: {
+    nrOab: {
         type: String,
         required: false
     },
-    sectionalUFOAB: {
+    ufOab: {
         type: String,
         required: false
     },
@@ -27,18 +28,16 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     enrollment: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Enrollment',
+        type: String,
         required: false
     },
     telephone: {
         type: String,
         required: false
     },
-    cpf: {
+    nrCpf: {
         type: String,
         required: true,
-        unique: true
     },
     password: {
         type: String,
@@ -46,7 +45,8 @@ const UserSchema = new mongoose.Schema({
         select: false
     },
     curricularPeriod: {
-        type: String,
+        type: Number,
+        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         required: false
     },
     observations: {
