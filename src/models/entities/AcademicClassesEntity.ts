@@ -22,6 +22,9 @@ export class AcademicClassesEntity {
   @Column({ type: 'text', nullable: false })
   name!: string;
 
+  @Column({ type: 'varchar', name: 'code', nullable: false , unique: true })
+  code!: string;
+
   @Column({ type: 'date', name: 'start_date', nullable: false })
   startDate!: Date;
 
@@ -31,7 +34,7 @@ export class AcademicClassesEntity {
   @Column({ type: 'varchar', length: 100, name: 'category' })
   category!: string;
 
-  @Column({ type: 'varchar', length: 100, name: 'course' })
+  @Column({ type: 'varchar', length: 100, name: 'course', nullable: true })
   course!: string;
 
   @Column({ type: 'boolean', default: true, name: 'active' })
@@ -47,7 +50,7 @@ export class AcademicClassesEntity {
   @JoinColumn({ name: 'campus_id' })
   campus!: CampusEntity;
 
-  @Column({ type: 'varchar', length: 255, name: 'integration' })
+  @Column({ type: 'varchar', length: 255, name: 'integration', nullable: true })
   integration!: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

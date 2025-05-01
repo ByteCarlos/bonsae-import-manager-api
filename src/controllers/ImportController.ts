@@ -5,20 +5,38 @@ import UserDocument from '../models/documents/UserDocument.js';
 import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
 import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
 import SubjectDocument from '../models/documents/SubjectDocument.js';
-import { FulfillmentService } from '../services/FulfillmentService.js';
+import { TransactionalService } from '../services/TransactionalService.js';
 import { BundleDto } from '../dtos/BundleDto.js';
+import { ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from '../dtos/EnrollmentRawEntryDto.js';
 
 export default {
-    async finish(req: Request, res: Response) {
+    async complete(req: Request, res: Response) {
         try {
-            console.log(req.body.data);
+            const studentEnrollments = req.body.data.studentEnrollments.map(
+            (studentEnrollment: StudentEnrollmentRawEntryDto) => ({
+                ...studentEnrollment,
+                email: studentEnrollment.studentEmail,
+                isProfessor: false,
+            })
+            );
+
+            const professorEnrollments = req.body.data.professorEnrollments.map(
+            (professorEnrollment: ProfessorEnrollmentRawEntryDto) => ({
+                ...professorEnrollment,
+                email: professorEnrollment.professorEmail,
+                isProfessor: true,
+            })
+            );
+
+            const enrollments = [...studentEnrollments, ...professorEnrollments];
+
             const dataBundle: BundleDto = req.body.data;
-            console.log(dataBundle);
+            dataBundle.enrollmentsDto = enrollments;
 
-            const fulfillmentService = new FulfillmentService();
-            const bundledEntities = await fulfillmentService.fulfillRequirements(dataBundle);
+            const transactionalService = new TransactionalService();
+            const entitiesBundle = await transactionalService.completeImport(dataBundle);
 
-            return res.status(201).json(bundledEntities);
+            return res.status(201).json(entitiesBundle);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
         }

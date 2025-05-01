@@ -29,7 +29,7 @@ export class DisciplinesEntity {
   @Column({ type: 'varchar', length: 50, name: 'code' })
   code!: string;
 
-  @Column({ type: 'varchar', length: 12, name: 'shift' })
+  @Column({ type: 'varchar', length: 12, name: 'shift', nullable: true })
   shift!: string;
 
   @Column({ type: 'boolean', default: true, name: 'active' })
@@ -38,7 +38,7 @@ export class DisciplinesEntity {
   @Column({ type: 'boolean', default: false, name: 'is_exceptional' })
   isExceptional!: boolean;
 
-  @Column({ type: 'varchar', length: 255, name: 'integration' })
+  @Column({ type: 'varchar', length: 255, name: 'integration', nullable: true })
   integration!: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

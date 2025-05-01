@@ -3,21 +3,23 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  Unique
 } from 'typeorm';
 
 @Entity({ name: 'users' })
+@Unique('unique_user', ['profileId', 'name', 'registrationNumber', 'email'])
 export class UsersEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: number;
 
-  @Column({ type: 'int', name: 'id_old_bonsae'})
+  @Column({ type: 'int', name: 'id_old_bonsae', nullable: true })
   idOldBonsae!: number;
 
-  @Column({ type: 'int', name: 'id_audora'})
+  @Column({ type: 'int', name: 'id_audora', nullable: true })
   idAudora!: number;
 
-  @Column({ type: 'bigint', name: 'profile_id', nullable: false})
+  @Column({ type: 'bigint', name: 'profile_id', nullable: false })
   profileId!: number;
 
   @Column({ type: 'boolean', default: true, name: 'active' })
@@ -26,103 +28,103 @@ export class UsersEntity {
   @Column({ type: 'text', nullable: false })
   name!: string;
 
-  @Column({ type: 'varchar', length: 50, name: 'registration_number'})
+  @Column({ type: 'varchar', length: 50, name: 'registration_number', nullable: true })
   registrationNumber!: string;
 
-  @Column({ type: 'varchar', length: 100, name: 'email', nullable: false})
+  @Column({ type: 'varchar', length: 100, name: 'email', nullable: false })
   email!: string;
 
-  @Column({ type: 'boolean', default: false, name: 'receive_emails'})
+  @Column({ type: 'boolean', default: false, name: 'receive_emails' })
   receiveEmails!: boolean;
 
-  @Column({ type: 'varchar', length: 100, name: 'gmail'})
+  @Column({ type: 'varchar', length: 100, name: 'gmail', nullable: true })
   gmail!: string;
 
-  @Column({ type: 'text', name: 'gcalendar_Credentials'})
+  @Column({ type: 'text', name: 'gcalendar_Credentials', nullable: true })
   gcalendarCredentials!: string;
 
-  @Column({ type: 'boolean', default: false, name: 'approve_api'})
+  @Column({ type: 'boolean', default: false, name: 'approve_api', nullable: true })
   aprroveApi!: boolean;
 
-  @Column({ type: 'varchar', length: 255, name: 'approve_msg'})
+  @Column({ type: 'varchar', length: 255, name: 'approve_msg', nullable: true })
   approveMsg!: string;
 
-  @Column({ type: 'varchar', length: 20, name: 'telephone'})
+  @Column({ type: 'varchar', length: 20, name: 'telephone', nullable: true })
   telephone!: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'password'})
+  @Column({ type: 'varchar', length: 255, name: 'password' })
   password!: string;
 
-  @Column({ type: 'varchar', length: 14, name: 'cpf'})
+  @Column({ type: 'varchar', length: 14, name: 'cpf' })
   cpf!: string;
 
-  @Column({ type: 'int', name: 'period_id'})
+  @Column({ type: 'int', name: 'period_id', nullable: true })
   periodId!: number;
 
-  @Column({ type: 'varchar', length: 20, name: 'oab'})
+  @Column({ type: 'varchar', length: 20, name: 'oab', nullable: true })
   oab!: string;
 
-  @Column({ type: 'char', length: 2, name: 'oab_uf'})
+  @Column({ type: 'char', length: 2, name: 'oab_uf', nullable: true })
   oabUf!: string;
 
-  @Column({ type: 'time', name: 'workload_real'})
+  @Column({ type: 'time', name: 'workload_real', nullable: true })
   workloadReal!: string;
 
-  @Column({ type: 'time', name: 'workload_simulated'})
+  @Column({ type: 'time', name: 'workload_simulated', nullable: true })
   worloadSimulated!: string;
 
-  @Column({ type: 'text', name: 'observations'})
+  @Column({ type: 'text', name: 'observations', nullable: true})
   observations!: string;
 
-  @Column({ type: 'varchar', length: '255', name: 'profile_pic'})
+  @Column({ type: 'varchar', length: '255', name: 'profile_pic', nullable: true })
   profilePic!: string;
 
-  @Column({ type: 'varchar', length: 100, name: 'course'})
+  @Column({ type: 'varchar', length: 100, name: 'course', nullable: true })
   course!: string;
 
-  @Column({ type: 'int', name: 'course_id' })
+  @Column({ type: 'int', name: 'course_id', nullable: true })
   courseId!: number;
 
-  @Column({ type: 'boolean', default: false, name: 'is_admin' })
+  @Column({ type: 'boolean', default: false, name: 'is_admin', nullable: true })
   isAdmin!: boolean;
 
-  @Column({ type: 'varchar', length: 100, name: 'remember_token' })
+  @Column({ type: 'varchar', length: 100, name: 'remember_token', nullable: true })
   rememberToken!: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'access_token' })
+  @Column({ type: 'varchar', length: 255, name: 'access_token', nullable: true })
   accessToken!: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'browser_agent' })
+  @Column({ type: 'varchar', length: 255, name: 'browser_agent', nullable: true })
   browserAgent!: string;
 
-  @Column({ type: 'date', name: 'date_accept' })
+  @Column({ type: 'date', name: 'date_accept', nullable: true })
   dateAccept!: Date;
 
-  @Column({ type: 'datetime', name: 'last_login' })
+  @Column({ type: 'datetime', name: 'last_login', nullable: true })
   lastLogin!: Date;
 
-  @Column({ type: 'datetime', name: 'last_logout' })
+  @Column({ type: 'datetime', name: 'last_logout', nullable: true })
   lastLogout!: Date;
 
-  @Column({ type: 'time', name: 'logged_time' })
+  @Column({ type: 'time', name: 'logged_time', nullable: true })
   loggedTime!: string;
 
-  @Column({ type: 'time', name: 'all_time_logged' })
+  @Column({ type: 'time', name: 'all_time_logged', nullable: true })
   allTimeLogged!: string;
 
-  @Column({ type: 'time', name: 'average_logged_time' })
+  @Column({ type: 'time', name: 'average_logged_time', nullable: true })
   averageLoggedTime!: string;
 
-  @Column({ type: 'int', default: 0, name: 'times_active' })
+  @Column({ type: 'int', default: 0, name: 'times_active', nullable: true })
   timesActive!: number;
 
-  @Column({ type: 'varchar', length: 45, name: 'ip' })
+  @Column({ type: 'varchar', length: 45, name: 'ip', nullable: true })
   ip!: string;
 
-  @Column({ type: 'tinyint', default: 0, name: 'permission' })
+  @Column({ type: 'tinyint', default: 0, name: 'permission', nullable: true })
   permission!: number;
 
-  @Column({ type: 'varchar', length: 255, name: 'integration' })
+  @Column({ type: 'varchar', length: 255, name: 'integration', nullable: true })
   integration!: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

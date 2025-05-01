@@ -7,34 +7,26 @@ export enum UserProfile {
     ADVOGADO = 'Advogado(a)'
 }
 
+export const UserProfileMap: Record<UserProfile, number> = {
+    [UserProfile.ALUNO]: 1,
+    [UserProfile.PROFESSOR]: 2,
+    [UserProfile.COORDENADOR]: 3,
+    [UserProfile.SECRETARIO]: 4,
+    [UserProfile.ESTAGIARIO]: 5,
+    [UserProfile.ADVOGADO]: 6
+};
+
 export interface UserRawEntryDto {
-    profile: UserProfile,
+    profileId: UserProfile,
     subprofile?: string,
     name: string,
-    nrOab?: string,
-    ufOab?: string,
+    oab?: string,
+    oabUf?: string,
     email: string,
-    enrollment?: string,
+    registrationNumber?: string,
     telephone?: string,
-    nrCpf: string,
+    cpf: string,
     password: string,
-    curricularPeriod?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
+    periodId?: 1 | 2| 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
     observations?: string
-}
-
-export const toUserRawEntry = (raw: any): UserRawEntryDto => {
-    return {
-        profile: raw.profile as UserProfile,
-        subprofile: String(raw.subprofile),
-        name: String(raw.name),
-        nrOab: String(raw.nrOab),
-        ufOab: String(raw.ufOab),
-        email: String(raw.email),
-        enrollment: String(raw.enrollment),
-        telephone: String(raw.telephone),
-        nrCpf: String(raw.nrCpf),
-        password: String(raw.password),
-        curricularPeriod: raw.curricularPeriod,
-        observations: String(raw.string)
-    };
 }

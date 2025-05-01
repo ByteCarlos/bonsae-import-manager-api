@@ -13,12 +13,3 @@ export interface SchoolPeriodRawEntryDto {
   startDate: Date,
   endDate: Date
 }
-
-export const toSchoolPeriodRawEntryDto = (raw: any): SchoolPeriodRawEntryDto => {
-  return {
-    code: String(raw.code),
-    name: raw.name as Period,
-    startDate: new Date(raw.startDate),
-    endDate: new Date(raw.endDate)
-  };
-}

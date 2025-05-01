@@ -9,7 +9,6 @@ CREATE TABLE school_periods (
     deleted_at TIMESTAMP NULL
 );
 
--- Criado com base nos dados das planilhas
 CREATE TABLE campus (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL
@@ -99,6 +98,11 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL
 );
+
+-- constraint para tentar impedir repetição de usuário usando como base, email, nome, profile e matricula
+ALTER TABLE users
+ADD CONSTRAINT unique_user_profile_registration
+UNIQUE (profile_id, name, registration_number, email);
 
 CREATE TABLE discipline_users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

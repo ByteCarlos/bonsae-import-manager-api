@@ -1,5 +1,5 @@
 import { ClassRawEntryDto } from "./ClassRawEntryDto";
-import { ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from "./EnrollmentRawEntryDto";
+import { EnrollmentDto, ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from "./EnrollmentRawEntryDto";
 import { SchoolPeriodRawEntryDto } from "./SchoolPeriodRawEntryDto";
 import { SubjectRawEntryDto } from "./SubjectRawEntryDto";
 import { UserRawEntryDto } from "./UserRawEntryDto";
@@ -9,6 +9,5 @@ export interface BundleDto {
     subjects: SubjectRawEntryDto[];
     classes: ClassRawEntryDto[];
     users: UserRawEntryDto[];
-    studentsEnrollments: StudentEnrollmentRawEntryDto[];
-    professorEnrollments: ProfessorEnrollmentRawEntryDto[];
+    enrollments: EnrollmentDto[];
 }
