@@ -5,6 +5,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 const router = Router();
 
 router.post('/csv', asyncHandler(ImportController.import));
-router.post('/complete', asyncHandler(ImportController.complete))
+router.post('/save-data', asyncHandler(ImportController.saveData))
+router.post('/save-documents', asyncHandler(ImportController.saveDocumentsToTransactionalDatabase))
 
 export default router;

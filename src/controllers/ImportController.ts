@@ -8,9 +8,26 @@ import SubjectDocument from '../models/documents/SubjectDocument.js';
 import { TransactionalService } from '../services/TransactionalService.js';
 import { BundleDto } from '../dtos/BundleDto.js';
 import { ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from '../dtos/EnrollmentRawEntryDto.js';
+import { DocumentService } from '../services/DocumentService.js';
 
 export default {
-    async complete(req: Request, res: Response) {
+    async saveDocumentsToTransactionalDatabase(req: Request, res: Response) {
+        try {
+          const { schoolPeriodCode } = req.body;
+      
+          const documentService = new DocumentService();
+          const dataBundle = await documentService.createDataBundle(schoolPeriodCode);
+      
+          if (!dataBundle) {
+            return res.status(404).json({ error: `Data not found for code: ${schoolPeriodCode}` });
+          }
+      
+          return res.status(200).json(dataBundle);
+        } catch (error) {
+          return res.status(500).json({ error: (error as Error).message });
+        }
+    },
+    async saveData(req: Request, res: Response) {
         try {
             const studentEnrollments = req.body.data.studentsEnrollments.map(
             (studentEnrollment: StudentEnrollmentRawEntryDto) => ({

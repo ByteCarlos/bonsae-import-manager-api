@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { UserProfile } from "../../dtos/UserRawEntryDto";
 
 const UserSchema = new mongoose.Schema({
-    profile: {
+    profileId: {
         type: String,
         enum: UserProfile,
         required: true
@@ -15,11 +15,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    nrOab: {
+    oab: {
         type: String,
         required: false
     },
-    ufOab: {
+    oabUf: {
         type: String,
         required: false
     },
@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    enrollment: {
+    registrationNumber: {
         type: String,
         required: false
     },
@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    nrCpf: {
+    cpf: {
         type: String,
         required: true,
     },
@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
         select: false
     },
-    curricularPeriod: {
+    periodId: {
         type: Number,
         enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         required: false

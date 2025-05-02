@@ -1,11 +1,26 @@
 import { Request, Response } from 'express';
 import ClassDocument from '../models/documents/ClassDocument.js';
+import SubjectDocument from '../models/documents/SubjectDocument.js';
 
 export default {
 
     async storeBatch(req: Request, res: Response) {
         try {
-            const classes = req.body.map((classData: any) => new ClassDocument(classData));
+            const classes = await Promise.all(
+                req.body.map(async (classEntry: any) => {
+                    const subjectDocument = await SubjectDocument.findOne({ code: classEntry.subjectCode });
+    
+                    if (!subjectDocument) {
+                        throw new Error(`School Period not found for code: ${classEntry.subjectCode}`);
+                    }
+    
+                    return new ClassDocument({
+                        ...classEntry,
+                        subjectRef: subjectDocument._id,
+                    });
+                })
+            );
+
             await ClassDocument.insertMany(classes);
             return res.status(201).json(classes);
         } catch (error) {

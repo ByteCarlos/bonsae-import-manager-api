@@ -1,10 +1,25 @@
 import { Request, Response } from 'express';
 import SubjectDocument from '../models/documents/SubjectDocument';
+import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument';
 
 export default {
     async storeBatch(req: Request, res: Response) {
         try {
-            const subjects = req.body.map((subject: any) => new SubjectDocument(subject));
+            const subjects = await Promise.all(
+                req.body.map(async (subjectEntry: any) => {
+                    const schoolPeriodDocument = await SchoolPeriodDocument.findOne({ code: subjectEntry.periodId });
+    
+                    if (!schoolPeriodDocument) {
+                        throw new Error(`School Period not found for code: ${subjectEntry.periodId}`);
+                    }
+    
+                    return new SubjectDocument({
+                        ...subjectEntry,
+                        schoolPeriodRef: schoolPeriodDocument._id,
+                    });
+                })
+            );
+
             await SubjectDocument.insertMany(subjects);
             return res.status(201).json(subjects);
         } catch (error) {
@@ -15,6 +30,13 @@ export default {
     async store(req: Request, res: Response) {
         try {
             const subject = new SubjectDocument(req.body);
+            const schoolPeriod = await SchoolPeriodDocument.findOne({ code: subject.periodId });
+            
+            if (!schoolPeriod) {
+                throw new Error(`School Period not found for code: ${subject.periodId}`);
+            }
+            subject.schoolPeriodRef = schoolPeriod._id;            
+
             await subject.save();
             return res.status(201).json(subject);
         } catch (error) {

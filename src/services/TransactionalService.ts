@@ -99,10 +99,6 @@ export class TransactionalService {
     private async saveDisciplines(classes: ClassRawEntryDto[]) {
         const entities = await Promise.all(
             classes.map(async (classEntry) => {
-                if (!classEntry.code || !classEntry.name) {
-                    throw new Error(`Supplied class object missing obligatory fields`);
-                }
-
                 const entity = this.convertToEntity(classEntry, DisciplinesEntity);
     
                 if (classEntry.subjectCode) {
