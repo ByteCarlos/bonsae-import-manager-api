@@ -23,10 +23,10 @@ export class DisciplinesEntity {
   @JoinColumn({ name: 'academic_classes_id' })
   academicClass!: AcademicClassesEntity;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   name!: string;
 
-  @Column({ type: 'varchar', length: 50, name: 'code' })
+  @Column({ type: 'varchar', length: 50, name: 'code', nullable: true })
   code!: string;
 
   @Column({ type: 'varchar', length: 12, name: 'shift', nullable: true })

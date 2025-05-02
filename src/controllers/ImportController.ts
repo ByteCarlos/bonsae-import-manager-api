@@ -12,11 +12,11 @@ import { ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from '..
 export default {
     async complete(req: Request, res: Response) {
         try {
-            const studentEnrollments = req.body.data.studentEnrollments.map(
+            const studentEnrollments = req.body.data.studentsEnrollments.map(
             (studentEnrollment: StudentEnrollmentRawEntryDto) => ({
                 ...studentEnrollment,
                 email: studentEnrollment.studentEmail,
-                isProfessor: false,
+                professor: false,
             })
             );
 
@@ -24,14 +24,14 @@ export default {
             (professorEnrollment: ProfessorEnrollmentRawEntryDto) => ({
                 ...professorEnrollment,
                 email: professorEnrollment.professorEmail,
-                isProfessor: true,
+                professor: true,
             })
             );
 
             const enrollments = [...studentEnrollments, ...professorEnrollments];
 
             const dataBundle: BundleDto = req.body.data;
-            dataBundle.enrollmentsDto = enrollments;
+            dataBundle.enrollments = enrollments;
 
             const transactionalService = new TransactionalService();
             const entitiesBundle = await transactionalService.completeImport(dataBundle);

@@ -17,13 +17,13 @@ export class DisciplineUsersEntity {
 
   @ManyToOne(() => DisciplinesEntity)
   @JoinColumn({ name: 'discipline_id' })
-  discpline!: DisciplinesEntity;
+  discipline!: DisciplinesEntity;
 
   @ManyToOne(() => UsersEntity)
   @JoinColumn({ name: 'users_id' })
-  users!: UsersEntity;
+  user!: UsersEntity;
 
-  @Column({ type: 'int', name: 'team_id' })
+  @Column({ type: 'int', name: 'team_id', nullable: true })
   teamId!: number;
 
   @Column({ type: 'boolean', default: false, name: 'temporary' })

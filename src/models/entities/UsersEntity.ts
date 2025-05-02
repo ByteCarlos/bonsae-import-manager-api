@@ -25,7 +25,7 @@ export class UsersEntity {
   @Column({ type: 'boolean', default: true, name: 'active' })
   active!: boolean;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   name!: string;
 
   @Column({ type: 'varchar', length: 50, name: 'registration_number', nullable: true })

@@ -6,7 +6,7 @@ export interface EnrollmentDto {
     classCode: string,
     registrationNumber?: string,
     email?: string,
-    isProfessor: boolean
+    professor: boolean
 }
 
 export interface StudentEnrollmentRawEntryDto {
