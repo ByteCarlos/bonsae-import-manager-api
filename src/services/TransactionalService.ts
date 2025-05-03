@@ -29,12 +29,6 @@ export class TransactionalService {
         this.disciplineUsersRepository = AppDataSource.getRepository(DisciplineUsersEntity);
     }
 
-    private convertToEntity<T, U extends object>(source: T, target: new () => U): U {
-        const result = new target();
-        Object.assign(result, source);
-        return result;
-    }
-
     private async findOrCreateCampus(campusName: string): Promise<CampusEntity> {
         let campus = await this.campusRepository.findOne({ where: { name: campusName } });
     
@@ -62,16 +56,33 @@ export class TransactionalService {
     }
     
     private async saveSchoolPeriods(schoolPeriods: SchoolPeriodRawEntryDto[]) {
-        const entities = schoolPeriods.map((entry) =>
-            this.convertToEntity(entry, SchoolPeriodEntity)
-        );
+        console.log(schoolPeriods);
+        const entities = schoolPeriods.map((entry) => {
+            let entity = new SchoolPeriodEntity();
+            Object.assign(entity, {
+                code: entry.code,
+                name: entry.name,
+                startData: entry.startDate,
+                endDate: entry.endDate
+            });
+
+            return entity;
+        });
         return this.schoolPeriodRepository.save(entities);
     }
     
     private async saveAcademicClasses(subjects: SubjectRawEntryDto[]) {
         const entities = await Promise.all(
             subjects.map(async (subject) => {
-                const entity = this.convertToEntity(subject, AcademicClassesEntity);
+                const entity = new AcademicClassesEntity();
+                Object.assign(entity, {
+                    name: subject.name ?? '',
+                    code: subject.code,
+                    startDate: subject.startDate,
+                    endDate: subject.endDate,
+                    category: subject.category,
+                    period: subject.period ?? '',
+                });
     
                 if (subject.campus) {
                     entity.campus = await this.findOrCreateCampus(subject.campus);
@@ -99,7 +110,12 @@ export class TransactionalService {
     private async saveDisciplines(classes: ClassRawEntryDto[]) {
         const entities = await Promise.all(
             classes.map(async (classEntry) => {
-                const entity = this.convertToEntity(classEntry, DisciplinesEntity);
+                const entity = new DisciplinesEntity();
+                Object.assign(entity, {
+                    name: classEntry.name,
+                    code: classEntry.code,
+                    shift: classEntry.shift
+                });
     
                 if (classEntry.subjectCode) {
                     const academicClass = await this.academicClassesRepository.findOne({
@@ -124,7 +140,22 @@ export class TransactionalService {
 
     private async saveUsers(users: UserRawEntryDto[]) {
         const entities = users.map((entry) => {
-            const entity = this.convertToEntity(entry, UsersEntity);
+            const entity = new UsersEntity();
+            Object.assign(entity, {
+                profileId: UserProfileMap[entry.profileId],
+                name: entry.name,
+                oab: entry.oab ?? null,
+                oabUf: entry.oabUf ?? null,
+                email: entry.email,
+                registrationNumber: entry.registrationNumber ?? null,
+                telephone: entry.telephone ?? null,
+                cpf: entry.cpf,
+                password: entry.password,
+                periodId: entry.periodId ?? null,
+                observations: entry.observations ?? null,
+                active: true,
+            });
+
             entity.profileId = UserProfileMap[entry.profileId];
             return entity;
         });
@@ -135,7 +166,10 @@ export class TransactionalService {
     private async saveDisciplineUsers(enrollments: EnrollmentDto[]) {
         const entities = await Promise.all(
             enrollments.map(async (enrollment) => {
-                const entity = this.convertToEntity(enrollment, DisciplineUsersEntity);
+                const entity = new DisciplineUsersEntity();
+                Object.assign(entity, {
+                    professor: enrollment.professor,
+                });
                 
                 if (enrollment.registrationNumber || enrollment.email) {
                     const user = await this.usersRepository.findOne({

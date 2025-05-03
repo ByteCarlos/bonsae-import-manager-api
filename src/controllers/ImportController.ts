@@ -19,10 +19,13 @@ export default {
           const dataBundle = await documentService.createDataBundle(schoolPeriodCode);
       
           if (!dataBundle) {
-            return res.status(404).json({ error: `Data not found for code: ${schoolPeriodCode}` });
+            return res.status(404).json({ error: `Data not found for school period: ${schoolPeriodCode}` });
           }
+
+          const transactionalService = new TransactionalService();
+          const entitiesBundle = await transactionalService.completeImport(dataBundle);
       
-          return res.status(200).json(dataBundle);
+          return res.status(200).json(entitiesBundle);
         } catch (error) {
           return res.status(500).json({ error: (error as Error).message });
         }
@@ -114,14 +117,3 @@ export default {
         }
     }
 };
-
-/* 
-O método import foi adaptado para receber dados contendo um array com todas as etapas do fluxo de importação.
-Em cada etapa existem os dados extraidos do csv importado e a identificação do tipo correspondente.
-
-Exemplo de estrutura:
-dados: [
-    { tipo: 'period', dados: [{}, {}, {}] },
-    { tipo: 'subject', dados: [{}, {}, {}] }
-]
-*/

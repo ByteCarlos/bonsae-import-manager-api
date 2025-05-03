@@ -12,16 +12,16 @@ export class SchoolPeriodEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: number;
 
-  @Column({ type: 'enum', enum: Period, nullable: false })
+  @Column({ type: 'enum', enum: Period, nullable: true })
   name!: Period;
 
-  @Column({ type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   code!: string;
 
-  @Column({ type: 'date', name: 'start_date', nullable: false })
+  @Column({ type: 'date', name: 'start_date', nullable: true })
   startDate!: Date;
 
-  @Column({ type: 'date', name: 'end_date', nullable: false })
+  @Column({ type: 'date', name: 'end_date', nullable: true })
   endDate!: Date;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

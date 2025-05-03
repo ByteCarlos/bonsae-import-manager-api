@@ -32,19 +32,19 @@ export class DisciplinesEntity {
   @Column({ type: 'varchar', length: 12, name: 'shift', nullable: true })
   shift!: string;
 
-  @Column({ type: 'boolean', default: true, name: 'active' })
+  @Column({ type: 'boolean', default: true, name: 'active', nullable: true })
   active!: boolean;
 
-  @Column({ type: 'boolean', default: false, name: 'is_exceptional' })
+  @Column({ type: 'boolean', default: false, name: 'is_exceptional', nullable: true })
   isExceptional!: boolean;
 
   @Column({ type: 'varchar', length: 255, name: 'integration', nullable: true })
   integration!: string;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: true })
   updatedAt!: Date;
 
   @Column({ type: 'timestamp', name: 'deleted_at', nullable: true })

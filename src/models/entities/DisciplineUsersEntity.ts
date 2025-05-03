@@ -24,19 +24,19 @@ export class DisciplineUsersEntity {
   user!: UsersEntity;
 
   @Column({ type: 'int', name: 'team_id', nullable: true })
-  teamId!: number;
+  teamId?: number;
 
-  @Column({ type: 'boolean', default: false, name: 'temporary' })
-  temporary!: boolean;
+  @Column({ type: 'boolean', default: false, name: 'temporary', nullable: true })
+  temporary?: boolean;
 
-  @Column({ type: 'boolean', default: false, name: 'professor' })
-  professor!: boolean;
+  @Column({ type: 'boolean', default: false, name: 'professor', nullable: true })
+  professor?: boolean;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt!: Date;
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })
+  createdAt?: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt!: Date;
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: true })
+  updatedAt?: Date;
 
   @Column({ type: 'timestamp', name: 'deleted_at', nullable: true })
   deletedAt?: Date;

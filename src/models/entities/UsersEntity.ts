@@ -19,22 +19,22 @@ export class UsersEntity {
   @Column({ type: 'int', name: 'id_audora', nullable: true })
   idAudora!: number;
 
-  @Column({ type: 'bigint', name: 'profile_id', nullable: false })
+  @Column({ type: 'bigint', name: 'profile_id', nullable: true })
   profileId!: number;
 
-  @Column({ type: 'boolean', default: true, name: 'active' })
+  @Column({ type: 'boolean', default: true, name: 'active', nullable: true })
   active!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   name!: string;
 
   @Column({ type: 'varchar', length: 50, name: 'registration_number', nullable: true })
   registrationNumber!: string;
 
-  @Column({ type: 'varchar', length: 100, name: 'email', nullable: false })
+  @Column({ type: 'varchar', length: 100, name: 'email', nullable: true })
   email!: string;
 
-  @Column({ type: 'boolean', default: false, name: 'receive_emails' })
+  @Column({ type: 'boolean', default: false, name: 'receive_emails', nullable: true })
   receiveEmails!: boolean;
 
   @Column({ type: 'varchar', length: 100, name: 'gmail', nullable: true })
@@ -52,10 +52,10 @@ export class UsersEntity {
   @Column({ type: 'varchar', length: 20, name: 'telephone', nullable: true })
   telephone!: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'password' })
+  @Column({ type: 'varchar', length: 255, name: 'password', nullable: true })
   password!: string;
 
-  @Column({ type: 'varchar', length: 14, name: 'cpf' })
+  @Column({ type: 'varchar', length: 14, name: 'cpf', nullable: true })
   cpf!: string;
 
   @Column({ type: 'int', name: 'period_id', nullable: true })
