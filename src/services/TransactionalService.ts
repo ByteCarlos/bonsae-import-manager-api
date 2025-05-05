@@ -56,13 +56,12 @@ export class TransactionalService {
     }
     
     private async saveSchoolPeriods(schoolPeriods: SchoolPeriodRawEntryDto[]) {
-        console.log(schoolPeriods);
         const entities = schoolPeriods.map((entry) => {
             let entity = new SchoolPeriodEntity();
             Object.assign(entity, {
                 code: entry.code,
                 name: entry.name,
-                startData: entry.startDate,
+                startDate: entry.startDate,
                 endDate: entry.endDate
             });
 
@@ -73,28 +72,28 @@ export class TransactionalService {
     
     private async saveAcademicClasses(subjects: SubjectRawEntryDto[]) {
         const entities = await Promise.all(
-            subjects.map(async (subject) => {
+            subjects.map(async (entry) => {
                 const entity = new AcademicClassesEntity();
                 Object.assign(entity, {
-                    name: subject.name ?? '',
-                    code: subject.code,
-                    startDate: subject.startDate,
-                    endDate: subject.endDate,
-                    category: subject.category,
-                    period: subject.period ?? '',
+                    name: entry.name ?? '',
+                    code: entry.code,
+                    startDate: entry.startDate,
+                    endDate: entry.endDate,
+                    category: entry.category,
+                    period: entry.period ?? '',
                 });
     
-                if (subject.campus) {
-                    entity.campus = await this.findOrCreateCampus(subject.campus);
+                if (entry.campus) {
+                    entity.campus = await this.findOrCreateCampus(entry.campus);
                 }
     
-                if (subject.periodId) {
+                if (entry.periodId) {
                     const schoolPeriod = await this.schoolPeriodRepository.findOne({
-                        where: { code: subject.periodId }
+                        where: { code: entry.periodId }
                     });
     
                     if (!schoolPeriod) {
-                        throw new Error(`School period with id "${subject.periodId}" not found.`);
+                        throw new Error(`School period with id "${entry.periodId}" not found.`);
                     }
     
                     entity.schoolPeriod = schoolPeriod;
@@ -109,22 +108,22 @@ export class TransactionalService {
 
     private async saveDisciplines(classes: ClassRawEntryDto[]) {
         const entities = await Promise.all(
-            classes.map(async (classEntry) => {
+            classes.map(async (entry) => {
                 const entity = new DisciplinesEntity();
                 Object.assign(entity, {
-                    name: classEntry.name,
-                    code: classEntry.code,
-                    shift: classEntry.shift
+                    name: entry.name,
+                    code: entry.code,
+                    shift: entry.shift
                 });
     
-                if (classEntry.subjectCode) {
+                if (entry.subjectCode) {
                     const academicClass = await this.academicClassesRepository.findOne({
-                        where: { code: classEntry.subjectCode },
+                        where: { code: entry.subjectCode },
                         relations: ['schoolPeriod']
                     });
     
                     if (!academicClass) {
-                        throw new Error(`Academic class not found for code: "${classEntry.subjectCode}"`);
+                        throw new Error(`Academic class not found for code: "${entry.subjectCode}"`);
                     }
     
                     entity.academicClass = academicClass;
@@ -165,44 +164,43 @@ export class TransactionalService {
 
     private async saveDisciplineUsers(enrollments: EnrollmentDto[]) {
         const entities = await Promise.all(
-            enrollments.map(async (enrollment) => {
+            enrollments.map(async (entry) => {
                 const entity = new DisciplineUsersEntity();
                 Object.assign(entity, {
-                    professor: enrollment.professor,
+                    professor: entry.professor,
                 });
                 
-                if (enrollment.registrationNumber || enrollment.email) {
+                if (entry.registrationNumber || entry.email) {
                     const user = await this.usersRepository.findOne({
                         where: [
-                            { registrationNumber: enrollment.registrationNumber },
-                            { email: enrollment.email }
+                            { registrationNumber: entry.registrationNumber },
+                            { email: entry.email }
                         ]
                     });              
-                    console.log(user);      
                         
                     if (!user) {
-                        throw new Error(`User not found for registration number "${enrollment.registrationNumber}" and email ${enrollment.email}`);
+                        throw new Error(`User not found for registration number "${entry.registrationNumber}" and email ${entry.email}`);
                     }
 
                     entity.user = user;
                 }
 
-                if (enrollment.classCode) {
+                if (entry.classCode) {
                     const discipline = await this.disciplinesRepository.findOne(({
-                        where: { code: enrollment.classCode }
+                        where: { code: entry.classCode }
                     }));
 
                     if (!discipline) {
-                        throw new Error(`Discipline not found for class code "${enrollment.classCode}"`);
+                        throw new Error(`Discipline not found for class code "${entry.classCode}"`);
                     }
 
                     entity.discipline = discipline;
                 }
     
-                return this.disciplineUsersRepository.save(entity);
+                return entity;
             })
         );
     
-        return this.disciplinesRepository.save(entities);
+        return this.disciplineUsersRepository.save(entities);
     }
 }

@@ -33,19 +33,19 @@ export default {
     async saveData(req: Request, res: Response) {
         try {
             const studentEnrollments = req.body.data.studentsEnrollments.map(
-            (studentEnrollment: StudentEnrollmentRawEntryDto) => ({
-                ...studentEnrollment,
-                email: studentEnrollment.studentEmail,
-                professor: false,
-            })
+                (studentEnrollment: StudentEnrollmentRawEntryDto) => ({
+                    ...studentEnrollment,
+                    email: studentEnrollment.studentEmail,
+                    professor: false,
+                })
             );
 
             const professorEnrollments = req.body.data.professorEnrollments.map(
-            (professorEnrollment: ProfessorEnrollmentRawEntryDto) => ({
-                ...professorEnrollment,
-                email: professorEnrollment.professorEmail,
-                professor: true,
-            })
+                (professorEnrollment: ProfessorEnrollmentRawEntryDto) => ({
+                    ...professorEnrollment,
+                    email: professorEnrollment.professorEmail,
+                    professor: true,
+                })
             );
 
             const enrollments = [...studentEnrollments, ...professorEnrollments];
