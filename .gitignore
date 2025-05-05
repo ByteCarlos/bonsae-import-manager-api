@@ -1,7 +1,7 @@
 node_modules
 config
 coverage
-.env*
+.env
 .vscode
 yarn.lock
 package-lock.json
