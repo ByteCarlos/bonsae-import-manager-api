@@ -18,7 +18,7 @@ await db.connect();
 const server: http.Server = createServer(app);
 
 // Configuração de CORS
-const whitelist: string[] = ['http://localhost:3005', 'https://entrega-web.netlify.app', 'https://motumbrasil.com'];
+const whitelist: string[] = ['http://localhost:3005'];
 
 const corsOptions = {
     origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
