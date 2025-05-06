@@ -9,7 +9,7 @@ import { UserSQL } from '../models/mappers/User.js';
 import AcademicClass from '../models/AcademicClass.js';
 import SchoolPeriod from '../models/SchoolPeriod.js';
 
-export const syncToBonsae = async (req: Request, res: Response): Promise<Response> => {
+export const syncToBonsae = async (_req: Request, res: Response): Promise<Response> => {
     const t = await sequelize.transaction();
 
     try {
@@ -18,7 +18,7 @@ export const syncToBonsae = async (req: Request, res: Response): Promise<Respons
         const insertedAcademicClass = [];
 
         await Promise.all(
-            academicClass.map(async (classe) => {
+            academicClass.map(async (_classe) => {
                 const classData = {
                     // TODO: colocar as propriedades
                 };
@@ -36,7 +36,7 @@ export const syncToBonsae = async (req: Request, res: Response): Promise<Respons
         const insertedDisciplines = [];
 
         await Promise.all(
-            disciplines.map(async (discipline) => {
+            disciplines.map(async (_discipline) => {
                 const disciplineData = {
                     // TODO: colocar as propriedades
                 }
@@ -55,7 +55,7 @@ export const syncToBonsae = async (req: Request, res: Response): Promise<Respons
         const insertedSchoolPeriods = [];
 
         await Promise.all(
-            schoolPeriods.map(async (period) => {
+            schoolPeriods.map(async (_period) => {
                 const periodData = {
                     // TODO: colocar as propriedades
                 }
@@ -72,7 +72,7 @@ export const syncToBonsae = async (req: Request, res: Response): Promise<Respons
         const insertedUsers = [];
 
         await Promise.all(
-            users.map(async (user) => {
+            users.map(async (_user) => {
                 const userData = {
                     // TODO: colocar as propriedades
                 }
