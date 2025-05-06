@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../connection/mysql.js';
 
-export class SchoolPeriod extends Model {}
+export class SchoolPeriodSQL extends Model {}
 
-SchoolPeriod.init({
+SchoolPeriodSQL.init({
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
     primaryKey: true,
@@ -18,7 +18,7 @@ SchoolPeriod.init({
   deleted_at: DataTypes.DATE,
 }, {
   sequelize,
-  modelName: 'SchoolPeriod',
+  modelName: 'SchoolPeriodSQL',
   tableName: 'school_periods',
   timestamps: false,
   paranoid: true,

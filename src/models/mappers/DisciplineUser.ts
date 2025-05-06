@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../connection/mysql.js';
 
-export class DisciplineUser extends Model {}
+export class DisciplineUserSQL extends Model {}
 
-DisciplineUser.init({
+DisciplineUserSQL.init({
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
     primaryKey: true,
@@ -19,7 +19,7 @@ DisciplineUser.init({
   deleted_at: DataTypes.DATE,
 }, {
   sequelize,
-  modelName: 'DisciplineUser',
+  modelName: 'DisciplineUserSQL',
   tableName: 'discipline_users',
   timestamps: false,
   paranoid: true,

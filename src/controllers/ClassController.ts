@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Class from '../models/Class.js'
+import Class from '../models/AcademicClass.js'
 
 export default {
     async store(req: Request, res: Response) {

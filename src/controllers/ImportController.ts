@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import Period from '../models/Period.js';
+import Period from '../models/SchoolPeriod.js';
 import Subject from '../models/Subject.js';
-import Class from '../models/Class.js';
+import Class from '../models/AcademicClass.js';
 import User from '../models/User.js';
 import Enrollment from '../models/Enrollment.js';
 

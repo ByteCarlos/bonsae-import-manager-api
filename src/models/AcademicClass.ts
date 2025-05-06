@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ClassSchema = new mongoose.Schema({
+const AcademicClassSchema = new mongoose.Schema({
     code: { type: String, required: true, unique: true },
     shift: { type: String, enum: ['morning', 'afternoon', 'night'], required: true },
     discipline: { type: mongoose.Schema.Types.ObjectId, ref: 'Discipline', required: true },
@@ -9,4 +9,4 @@ const ClassSchema = new mongoose.Schema({
     subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true }
 });
 
-export default mongoose.model('Class', ClassSchema);
+export default mongoose.model('AcademicClass', AcademicClassSchema);

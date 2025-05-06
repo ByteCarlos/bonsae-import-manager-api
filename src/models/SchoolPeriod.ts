@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const PeriodSchema = new mongoose.Schema({
+const SchoolPeriodSchema = new mongoose.Schema({
   identifier: {
     type: String,
     required: true,
@@ -14,4 +14,4 @@ const PeriodSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-export default mongoose.model('Period', PeriodSchema);
+export default mongoose.model('SchoolPeriod', SchoolPeriodSchema);

@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../connection/mysql.js';
 
-export class AcademicClass extends Model {}
+export class AcademicClassSQL extends Model {}
 
-AcademicClass.init({
+AcademicClassSQL.init({
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
     primaryKey: true,
@@ -26,7 +26,7 @@ AcademicClass.init({
   deleted_at: DataTypes.DATE,
 }, {
   sequelize,
-  modelName: 'AcademicClass',
+  modelName: 'AcademicClassSQL',
   tableName: 'academic_classes',
   timestamps: false,
   paranoid: true,

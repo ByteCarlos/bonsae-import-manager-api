@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Period from '../models/Period.js';
+import Period from '../models/SchoolPeriod.js';
 
 export default {
     async store(req: Request, res: Response) {
