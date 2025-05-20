@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Period } from '../../dtos/SchoolPeriodRawEntryDto';
+import { Period } from '../../dtos/SchoolPeriodDto';
 
 @Entity({ name: 'school_periods' })
 export class SchoolPeriodEntity {

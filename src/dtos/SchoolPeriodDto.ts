@@ -7,7 +7,12 @@ export enum Period {
   SEGUNDO_SEMESTRE_SEGUNDO_BIMESTRE = '2º Semestre - 2º Bimestre',
 }
 
-export interface SchoolPeriodRawEntryDto {
+export interface SchoolPeriodDto {
+  processId: string;
+  data: SchoolPeriodDtoData[];
+}
+
+export interface SchoolPeriodDtoData {
   code: string,
   name: Period,
   startDate: Date,

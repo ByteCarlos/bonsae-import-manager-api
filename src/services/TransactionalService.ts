@@ -1,10 +1,10 @@
 import { AppDataSource } from "../connection/mysqlConnection";
-import { BundleDto } from "../dtos/BundleDto";
-import { ClassRawEntryDto } from "../dtos/ClassRawEntryDto";
-import { EnrollmentDto } from "../dtos/EnrollmentRawEntryDto";
-import { SchoolPeriodRawEntryDto } from "../dtos/SchoolPeriodRawEntryDto";
-import { SubjectRawEntryDto } from "../dtos/SubjectRawEntryDto";
-import { UserProfileMap, UserRawEntryDto } from "../dtos/UserRawEntryDto";
+import { ProcessDto } from "../dtos/ProcessDto";
+import { ClassDto, ClassDtoData } from "../dtos/ClassDto";
+import { EnrollmentDto, EnrollmentDtoData } from "../dtos/EnrollmentDto";
+import { SchoolPeriodDto, SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
+import { SubjectDto, SubjectDtoData } from "../dtos/SubjectDto";
+import { UserDto, UserDtoData, UserProfileMap } from "../dtos/UserDto";
 import { AcademicClassesEntity } from "../models/entities/AcademicClassesEntity";
 import { CampusEntity } from "../models/entities/CampusEntity";
 import { DisciplinesEntity } from "../models/entities/DisciplinesEntity";
@@ -39,12 +39,12 @@ export class TransactionalService {
         return campus;
     }
 
-    async completeImport(dataBundle: BundleDto) {
-        const schoolPeriods = await this.saveSchoolPeriods(dataBundle.schoolPeriods);
-        const academicClasses = await this.saveAcademicClasses(dataBundle.subjects);
-        const disciplines = await this.saveDisciplines(dataBundle.classes);
-        const users = await this.saveUsers(dataBundle.users);
-        const disciplineUsers = await this.saveDisciplineUsers(dataBundle.enrollments)
+    async completeImport(processData: ProcessDto) {
+        const schoolPeriods = await this.saveSchoolPeriods(processData.schoolPeriods);
+        const academicClasses = await this.saveAcademicClasses(processData.subjects);
+        const disciplines = await this.saveDisciplines(processData.classes);
+        const users = await this.saveUsers(processData.users);
+        const disciplineUsers = await this.saveDisciplineUsers(processData.enrollments)
         
         return {
             schoolPeriodsEntities: schoolPeriods,
@@ -55,7 +55,7 @@ export class TransactionalService {
         };
     }
     
-    private async saveSchoolPeriods(schoolPeriods: SchoolPeriodRawEntryDto[]) {
+    private async saveSchoolPeriods(schoolPeriods: SchoolPeriodDtoData[]) {
         console.log(schoolPeriods);
         const entities = schoolPeriods.map((entry) => {
             let entity = new SchoolPeriodEntity();
@@ -71,7 +71,7 @@ export class TransactionalService {
         return this.schoolPeriodRepository.save(entities);
     }
     
-    private async saveAcademicClasses(subjects: SubjectRawEntryDto[]) {
+    private async saveAcademicClasses(subjects: SubjectDtoData[]) {
         const entities = await Promise.all(
             subjects.map(async (subject) => {
                 const entity = new AcademicClassesEntity();
@@ -107,7 +107,7 @@ export class TransactionalService {
         return this.academicClassesRepository.save(entities);
     }
 
-    private async saveDisciplines(classes: ClassRawEntryDto[]) {
+    private async saveDisciplines(classes: ClassDtoData[]) {
         const entities = await Promise.all(
             classes.map(async (classEntry) => {
                 const entity = new DisciplinesEntity();
@@ -138,7 +138,7 @@ export class TransactionalService {
         return this.disciplinesRepository.save(entities);
     }
 
-    private async saveUsers(users: UserRawEntryDto[]) {
+    private async saveUsers(users: UserDtoData[]) {
         const entities = users.map((entry) => {
             const entity = new UsersEntity();
             Object.assign(entity, {
@@ -163,7 +163,7 @@ export class TransactionalService {
         return this.usersRepository.save(entities);
     }
 
-    private async saveDisciplineUsers(enrollments: EnrollmentDto[]) {
+    private async saveDisciplineUsers(enrollments: EnrollmentDtoData[]) {
         const entities = await Promise.all(
             enrollments.map(async (enrollment) => {
                 const entity = new DisciplineUsersEntity();

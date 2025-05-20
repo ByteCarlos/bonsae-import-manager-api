@@ -1,4 +1,9 @@
-export interface SubjectRawEntryDto {
+export interface SubjectDto {
+    processId: string;
+    data: SubjectDtoData[];
+}
+
+export interface SubjectDtoData {
     periodId: string,
     name?: string,
     code: string,

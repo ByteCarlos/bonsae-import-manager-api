@@ -4,7 +4,12 @@ export enum ShiftEnum {
   NOTURNO = 'NOTURNO'
 }
 
-export interface ClassRawEntryDto {
+export interface ClassDto {
+  processId: string;
+  data: ClassDtoData
+}
+
+export interface ClassDtoData {
   subjectCode: string;
   shift?: ShiftEnum;
   name: string;

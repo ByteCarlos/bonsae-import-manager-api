@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import UserDocument from '../models/documents/UserDocument';
 
 export default {
-    // Criação de documentos em lote
     async storeBatch(req: Request, res: Response) {
         try {
-            const users = req.body.map((user: any) => new UserDocument(user));
+            const users = req.body.data.map((user: any) => new UserDocument(user));
             await UserDocument.insertMany(users);
             return res.status(201).json(users);
         } catch (error) {
@@ -15,7 +14,7 @@ export default {
     },
     async store(req: Request, res: Response) {
         try {
-            const user = new UserDocument(req.body);
+            const user = new UserDocument(req.body.data);
             await user.save();
             return res.status(201).json(user);
         } catch (error) {
@@ -41,7 +40,7 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const user = await UserDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const user = await UserDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
             if (!user) return res.status(404).json({ error: 'User not found' });
             return res.status(200).json(user);
         } catch (error) {

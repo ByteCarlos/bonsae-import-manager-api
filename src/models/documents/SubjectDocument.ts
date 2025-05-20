@@ -10,7 +10,13 @@ const SubjectSchema = new mongoose.Schema({
     period: { type: String, enum: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], required: false },
     state: { type: String, required: false },
     campus: { type: String, required: false },
+    processId: { type: String, required: true },
 
+    processRef: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Process',
+        required: true
+    },
     schoolPeriodRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SchoolPeriod',

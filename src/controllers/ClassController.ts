@@ -3,11 +3,10 @@ import ClassDocument from '../models/documents/ClassDocument.js';
 import SubjectDocument from '../models/documents/SubjectDocument.js';
 
 export default {
-
     async storeBatch(req: Request, res: Response) {
         try {
             const classes = await Promise.all(
-                req.body.map(async (classEntry: any) => {
+                req.body.data.map(async (classEntry: any) => {
                     const subjectDocument = await SubjectDocument.findOne({ code: classEntry.subjectCode });
     
                     if (!subjectDocument) {
@@ -31,7 +30,7 @@ export default {
 
     async store(req: Request, res: Response) {
         try {
-            const classData = new ClassDocument(req.body);
+            const classData = new ClassDocument(req.body.data);
             await classData.save();
             return res.status(201).json(classData);
         } catch (error) {
@@ -60,7 +59,7 @@ export default {
 
     async update(req: Request, res: Response) {
         try {
-            const classData = await ClassDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const classData = await ClassDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
             if (!classData) return res.status(404).json({ error: 'Class not found' });
             return res.status(200).json(classData);
         } catch (error) {

@@ -6,7 +6,7 @@ export default {
     async storeBatch(req: Request, res: Response) {
         try {
             const subjects = await Promise.all(
-                req.body.map(async (subjectEntry: any) => {
+                req.body.data.map(async (subjectEntry: any) => {
                     const schoolPeriodDocument = await SchoolPeriodDocument.findOne({ code: subjectEntry.periodId });
     
                     if (!schoolPeriodDocument) {
@@ -29,7 +29,7 @@ export default {
     },
     async store(req: Request, res: Response) {
         try {
-            const subject = new SubjectDocument(req.body);
+            const subject = new SubjectDocument(req.body.data);
             const schoolPeriod = await SchoolPeriodDocument.findOne({ code: subject.periodId });
             
             if (!schoolPeriod) {
@@ -62,7 +62,7 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const subject = await SubjectDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const subject = await SubjectDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json(subject);
         } catch (error) {

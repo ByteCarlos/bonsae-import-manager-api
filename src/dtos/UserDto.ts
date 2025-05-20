@@ -16,7 +16,12 @@ export const UserProfileMap: Record<UserProfile, number> = {
     [UserProfile.ADVOGADO]: 6
 };
 
-export interface UserRawEntryDto {
+export interface UserDto {
+    processId: string;
+    data: UserDtoData[];
+}
+
+export interface UserDtoData {
     profileId: UserProfile,
     subprofile?: string,
     name: string,

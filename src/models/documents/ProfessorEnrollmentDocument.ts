@@ -5,7 +5,13 @@ const ProfessorEnrollmentSchema = new mongoose.Schema({
     classCode: { type: String, required: true },
     registrationNumber: { type: String, required: false },
     professorEmail: { type: String, required: false },
+    processId: { type: String, required: true },
 
+    processRef: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Process',
+        required: true
+    },
     subjectRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject',

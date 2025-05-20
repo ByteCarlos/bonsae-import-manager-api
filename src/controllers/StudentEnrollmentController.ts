@@ -8,7 +8,7 @@ export default {
     async storeBatch(req: Request, res: Response) {
         try {
             const enrollments = await Promise.all(
-                req.body.map(async (entry: any) => {
+                req.body.data.map(async (entry: any) => {
                     const [subject, classDoc, user] = await Promise.all([
                         SubjectDocument.findOne({ code: entry.subjectCode }),
                         ClassDocument.findOne({ code: entry.classCode }),
@@ -52,7 +52,7 @@ export default {
     },
     async store(req: Request, res: Response) {
         try {
-            const enrollment = new StudentEnrollmentDocument(req.body);
+            const enrollment = new StudentEnrollmentDocument(req.body.data);
             const [subject, classDoc, user] = await Promise.all([
                 SubjectDocument.findOne({ code: enrollment.subjectCode }),
                 ClassDocument.findOne({ code: enrollment.classCode }),
@@ -105,7 +105,7 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const enrollment = await StudentEnrollmentDocument.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            const enrollment = await StudentEnrollmentDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
             if (!enrollment) return res.status(404).json({ error: 'Student enrollment not found' });
             return res.status(200).json(enrollment);
         } catch (error) {

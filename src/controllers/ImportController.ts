@@ -6,42 +6,43 @@ import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocu
 import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
 import SubjectDocument from '../models/documents/SubjectDocument.js';
 import { TransactionalService } from '../services/TransactionalService.js';
-import { BundleDto } from '../dtos/BundleDto.js';
-import { ProfessorEnrollmentRawEntryDto, StudentEnrollmentRawEntryDto } from '../dtos/EnrollmentRawEntryDto.js';
+import { ProcessDto } from '../dtos/ProcessDto.js';
+import { ProfessorEnrollmentDto, ProfessorEnrollmentDtoData, StudentEnrollmentDto, StudentEnrollmentDtoData } from '../dtos/EnrollmentDto.js';
 import { DocumentService } from '../services/DocumentService.js';
+import ProcessDocument from '../models/documents/ProcessDocument.js';
 
 export default {
     async saveDocumentsToTransactionalDatabase(req: Request, res: Response) {
         try {
-          const { schoolPeriodCode } = req.body;
+          const { schoolPeriodCode } = req.body.data;
       
           const documentService = new DocumentService();
-          const dataBundle = await documentService.createDataBundle(schoolPeriodCode);
+          const processData = await documentService.createProcessData(schoolPeriodCode);
       
-          if (!dataBundle) {
+          if (!processData) {
             return res.status(404).json({ error: `Data not found for school period: ${schoolPeriodCode}` });
           }
 
           const transactionalService = new TransactionalService();
-          const entitiesBundle = await transactionalService.completeImport(dataBundle);
+          const processEntities = await transactionalService.completeImport(processData);
       
-          return res.status(200).json(entitiesBundle);
+          return res.status(200).json(processEntities);
         } catch (error) {
           return res.status(500).json({ error: (error as Error).message });
         }
     },
     async saveData(req: Request, res: Response) {
         try {
-            const studentEnrollments = req.body.data.studentsEnrollments.map(
-            (studentEnrollment: StudentEnrollmentRawEntryDto) => ({
+            const studentEnrollments = req.body.data.data.studentsEnrollments.map(
+            (studentEnrollment: StudentEnrollmentDtoData) => ({
                 ...studentEnrollment,
                 email: studentEnrollment.studentEmail,
                 professor: false,
             })
             );
 
-            const professorEnrollments = req.body.data.professorEnrollments.map(
-            (professorEnrollment: ProfessorEnrollmentRawEntryDto) => ({
+            const professorEnrollments = req.body.data.data.professorEnrollments.map(
+            (professorEnrollment: ProfessorEnrollmentDtoData) => ({
                 ...professorEnrollment,
                 email: professorEnrollment.professorEmail,
                 professor: true,
@@ -50,20 +51,20 @@ export default {
 
             const enrollments = [...studentEnrollments, ...professorEnrollments];
 
-            const dataBundle: BundleDto = req.body.data;
-            dataBundle.enrollments = enrollments;
+            const processData: ProcessDto = req.body.data.data;
+            processData.enrollments = enrollments;
 
             const transactionalService = new TransactionalService();
-            const entitiesBundle = await transactionalService.completeImport(dataBundle);
+            const processEntities = await transactionalService.completeImport(processData);
 
-            return res.status(201).json(entitiesBundle);
+            return res.status(201).json(processEntities);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
         }
     },
     async import(req: Request, res: Response) {
         try {
-            const { data } = req.body;
+            const { data } = req.body.data;
 
             let schoolPeriods: any[] = [];
             let subjects: any[] = [];

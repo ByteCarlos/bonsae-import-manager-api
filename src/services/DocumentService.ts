@@ -1,9 +1,9 @@
-import { BundleDto } from "../dtos/BundleDto";
-import { ClassRawEntryDto } from "../dtos/ClassRawEntryDto";
-import { EnrollmentDto } from "../dtos/EnrollmentRawEntryDto";
-import { SchoolPeriodRawEntryDto } from "../dtos/SchoolPeriodRawEntryDto";
-import { SubjectRawEntryDto } from "../dtos/SubjectRawEntryDto";
-import { UserRawEntryDto } from "../dtos/UserRawEntryDto";
+import { ClassDtoData } from "../dtos/ClassDto";
+import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
+import { ProcessDto } from "../dtos/ProcessDto";
+import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
+import { SubjectDtoData } from "../dtos/SubjectDto";
+import { UserDtoData } from "../dtos/UserDto";
 import ClassDocument from "../models/documents/ClassDocument";
 import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument";
 import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument";
@@ -12,7 +12,7 @@ import SubjectDocument from "../models/documents/SubjectDocument";
 import UserDocument from "../models/documents/UserDocument";
 
 export class DocumentService {
-    async createDataBundle(schoolPeriodCode: string): Promise<BundleDto | null> {
+    async createProcessData(schoolPeriodCode: string): Promise<ProcessDto | null> {
       const schoolPeriodDoc = await SchoolPeriodDocument.findOne({ code: schoolPeriodCode });
   
       if (!schoolPeriodDoc) {
@@ -20,24 +20,24 @@ export class DocumentService {
       }
   
       const subjectsDoc = await SubjectDocument.find({ periodId: schoolPeriodDoc.code });
-      const subjectsDto = subjectsDoc.flatMap(subjectDoc => subjectDoc as SubjectRawEntryDto);
+      const subjectsDtoData = subjectsDoc.flatMap(subjectDoc => subjectDoc as SubjectDtoData);
       if (!subjectsDoc || subjectsDoc.length === 0) {
         return null;
       }
 
       const classesDocs = await Promise.all(
-        subjectsDto.flatMap(subject => ClassDocument.find({ subjectCode: subject.code }))
+        subjectsDtoData.flatMap(subject => ClassDocument.find({ subjectCode: subject.code }))
       );
       if (!classesDocs || classesDocs.length === 0) {
         return null;
       }
-      const classesDto: ClassRawEntryDto[] = classesDocs.flat().map(classDoc =>
-        classDoc as ClassRawEntryDto
+      const classesDtoData: ClassDtoData[] = classesDocs.flat().map(classDoc =>
+        classDoc as ClassDtoData
       );
 
       const [profEnrollmentDocsArray, studentEnrollmentDocsArray] = await Promise.all([
-        Promise.all(classesDto.map(classDto => ProfessorEnrollmentDocument.find({ classCode: classDto.code }))),
-        Promise.all(classesDto.map(classDto => StudentEnrollmentDocument.find({ classCode: classDto.code })))
+        Promise.all(classesDtoData.map(classDtoData => ProfessorEnrollmentDocument.find({ classCode: classDtoData.code }))),
+        Promise.all(classesDtoData.map(classDtoData => StudentEnrollmentDocument.find({ classCode: classDtoData.code })))
       ]);
       
       const profEnrollmentDocs = profEnrollmentDocsArray.flat();
@@ -46,7 +46,7 @@ export class DocumentService {
         return null;
       }
       
-      const enrollmentsDto: EnrollmentDto[] = [
+      const enrollmentsDtoData: EnrollmentDtoData[] = [
         ...profEnrollmentDocs.map(enrollment => ({
           subjectCode: enrollment.subjectCode,
           classCode: enrollment.classCode,
@@ -64,7 +64,7 @@ export class DocumentService {
       ];      
 
       const userDocs = await Promise.all(
-        enrollmentsDto.map(enrollment => UserDocument.find({
+        enrollmentsDtoData.map(enrollment => UserDocument.find({
           $or: [
             { email: enrollment.email },
             { registrationNumber: enrollment.registrationNumber }
@@ -75,16 +75,16 @@ export class DocumentService {
         return null;
       }
 
-      const usersDto: UserRawEntryDto[] = userDocs.flat().map(userDoc => userDoc as UserRawEntryDto);
+      const usersDtoData: UserDtoData[] = userDocs.flat().map(userDoc => userDoc as UserDtoData);
 
-      const dataBundle: BundleDto = {
-        schoolPeriods: [schoolPeriodDoc as unknown as SchoolPeriodRawEntryDto],
-        subjects: subjectsDto,
-        classes: classesDto,
-        users: usersDto,
-        enrollments: enrollmentsDto
+      const processData: ProcessDto = {
+        schoolPeriods: [schoolPeriodDoc as SchoolPeriodDtoData],
+        subjects: subjectsDtoData,
+        classes: classesDtoData,
+        users: usersDtoData,
+        enrollments: enrollmentsDtoData
       };
   
-      return dataBundle;
+      return processData;
     }
 }

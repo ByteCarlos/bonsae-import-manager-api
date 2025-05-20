@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { UserProfile } from "../../dtos/UserRawEntryDto";
+import { UserProfile } from "../../dtos/UserDto";
 
 const UserSchema = new mongoose.Schema({
     profileId: {
@@ -52,7 +52,14 @@ const UserSchema = new mongoose.Schema({
     observations: {
         type: String,
         required: false
-    }
+    },
+    processId: { type: String, required: true },
+
+    processRef: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Process',
+        required: true
+    },
 });
 
 export default mongoose.model('User', UserSchema);
