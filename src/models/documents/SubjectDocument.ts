@@ -19,7 +19,7 @@ const SubjectSchema = new mongoose.Schema({
     },
     schoolPeriodRef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'SchoolPeriod',
+        ref: 'School_Period',
         required: true
     }
 });

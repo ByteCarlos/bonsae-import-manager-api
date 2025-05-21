@@ -42,6 +42,10 @@ export default {
     }
   },
 
+  async getFullProcess(req: Request, res: Response) {
+    // TODO
+  },
+
   async getAllProcesses(_req: Request, res: Response) {
     try {
       const processes = await ProcessDocument.find();

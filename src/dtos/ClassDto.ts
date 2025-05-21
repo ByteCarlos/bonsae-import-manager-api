@@ -6,7 +6,7 @@ export enum ShiftEnum {
 
 export interface ClassDto {
   processId: string;
-  data: ClassDtoData
+  data: ClassDtoData[]
 }
 
 export interface ClassDtoData {

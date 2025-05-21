@@ -18,12 +18,11 @@ export default {
         }
 
         const schoolPeriods = data.map((schoolPeriod: SchoolPeriodDtoData) => {
-            const schoolPeriodDoc = new SchoolPeriodDocument({
-            ...schoolPeriod,
-            processId: processDoc.processId,
-            processRef: processDoc._id
+            return new SchoolPeriodDocument({
+                ...schoolPeriod,
+                processId: processDoc.processId,
+                processRef: processDoc._id
             });
-            return schoolPeriodDoc;
         });
 
         await SchoolPeriodDocument.insertMany(schoolPeriods);
@@ -34,14 +33,19 @@ export default {
         }
     },
 
-    async store(req: Request, res: Response): Promise<Response> {
+    async store(req: Request, res: Response) {
         try {
             const { processId } = req.body;
             const schoolPeriodData = req.body.data;
 
+            const existingPeriod = await SchoolPeriodDocument.findOne({ code: schoolPeriodData.code, processId });
+            if (existingPeriod) {
+                return res.status(409).json({ error: `School period ${schoolPeriodData.code} already created in this process` });
+            }
+
             const process = await ProcessDocument.findOne({ processId });
             if (!process) {
-            return res.status(404).json({ error: 'Process not found' });
+                return res.status(404).json({ error: 'Process not found' });
             }
 
             schoolPeriodData.processId = processId;
@@ -67,7 +71,7 @@ export default {
 
     async show(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findOne({ code: req.params.id });
+            const schoolPeriod = await SchoolPeriodDocument.findOne({ code: req.params.id, processId: req.body.processId });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json(schoolPeriod);
         } catch (error) {
@@ -77,7 +81,8 @@ export default {
 
     async update(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findOneAndUpdate({ code: req.params.id }, req.body.data, { new: true });
+            const { processId, ...data } = req.body;
+            const schoolPeriod = await SchoolPeriodDocument.findOneAndUpdate({ code: req.params.id, processId: processId }, data, { new: true, runValidators: true });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json(schoolPeriod);
         } catch (error) {
@@ -87,7 +92,7 @@ export default {
 
     async destroy(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ code: req.params.id });
+            const schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ code: req.params.id, processId: req.body.processId });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json({ message: 'School period deleted successfully' });
         } catch (error) {

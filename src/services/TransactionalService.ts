@@ -1,10 +1,10 @@
 import { AppDataSource } from "../connection/mysqlConnection";
 import { ProcessDto } from "../dtos/ProcessDto";
-import { ClassDto, ClassDtoData } from "../dtos/ClassDto";
-import { EnrollmentDto, EnrollmentDtoData } from "../dtos/EnrollmentDto";
-import { SchoolPeriodDto, SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
-import { SubjectDto, SubjectDtoData } from "../dtos/SubjectDto";
-import { UserDto, UserDtoData, UserProfileMap } from "../dtos/UserDto";
+import { ClassDtoData } from "../dtos/ClassDto";
+import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
+import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
+import { SubjectDtoData } from "../dtos/SubjectDto";
+import { UserDtoData, UserProfileMap } from "../dtos/UserDto";
 import { AcademicClassesEntity } from "../models/entities/AcademicClassesEntity";
 import { CampusEntity } from "../models/entities/CampusEntity";
 import { DisciplinesEntity } from "../models/entities/DisciplinesEntity";
@@ -82,6 +82,7 @@ export class TransactionalService {
                     endDate: subject.endDate,
                     category: subject.category,
                     period: subject.period ?? '',
+                    active: subject.state
                 });
     
                 if (subject.campus) {
