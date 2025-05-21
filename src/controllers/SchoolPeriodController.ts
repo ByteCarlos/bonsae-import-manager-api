@@ -34,10 +34,22 @@ export default {
         }
     },
 
-    async store(req: Request, res: Response) {
+    async store(req: Request, res: Response): Promise<Response> {
         try {
-            const schoolPeriod = new SchoolPeriodDocument(req.body.data);
+            const { processId } = req.body;
+            const schoolPeriodData = req.body.data;
+
+            const process = await ProcessDocument.findOne({ processId });
+            if (!process) {
+            return res.status(404).json({ error: 'Process not found' });
+            }
+
+            schoolPeriodData.processId = processId;
+            schoolPeriodData.processRef = process._id;
+
+            const schoolPeriod = new SchoolPeriodDocument(schoolPeriodData);
             await schoolPeriod.save();
+
             return res.status(201).json(schoolPeriod);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
@@ -55,7 +67,7 @@ export default {
 
     async show(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findById(req.params.id);
+            const schoolPeriod = await SchoolPeriodDocument.findOne({ code: req.params.id });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json(schoolPeriod);
         } catch (error) {
@@ -65,7 +77,7 @@ export default {
 
     async update(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
+            const schoolPeriod = await SchoolPeriodDocument.findOneAndUpdate({ code: req.params.id }, req.body.data, { new: true });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json(schoolPeriod);
         } catch (error) {
@@ -75,7 +87,7 @@ export default {
 
     async destroy(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findByIdAndDelete(req.params.id);
+            const schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ code: req.params.id });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json({ message: 'School period deleted successfully' });
         } catch (error) {

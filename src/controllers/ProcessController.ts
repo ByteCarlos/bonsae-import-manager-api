@@ -40,5 +40,51 @@ export default {
     } catch (error) {
       return res.status(500).json({ error: (error as Error).message });
     }
+  },
+
+  async getAllProcesses(_req: Request, res: Response) {
+    try {
+      const processes = await ProcessDocument.find();
+
+      if (!processes) {
+        return res.status(404).json({ error: "No process found" });
+      }
+
+      return res.status(200).json(processes);
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  },
+
+  async update(req: Request, res: Response): Promise<Response> {
+    try {
+      const { processId } = req.params;
+      const updateData = req.body;
+
+      const updatedProcess = await ProcessDocument.findOneAndUpdate(
+        { processId },
+        updateData,
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedProcess) {
+        return res.status(404).json({ error: 'Process not found' });
+      }
+
+      return res.status(200).json(updatedProcess);
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  },
+
+  async destroy(req: Request, res: Response) {
+    try {
+      const { processId } = req.params;
+      const process = await ProcessDocument.findOneAndDelete({ processId: processId });
+      if (!process) return res.status(404).json({ error: 'Process not found' });
+      return res.status(200).json({ message: 'Process deleted successfully' });
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
   }
 };

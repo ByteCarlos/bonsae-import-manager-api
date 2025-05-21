@@ -7,9 +7,8 @@ import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollment
 import SubjectDocument from '../models/documents/SubjectDocument.js';
 import { TransactionalService } from '../services/TransactionalService.js';
 import { ProcessDto } from '../dtos/ProcessDto.js';
-import { ProfessorEnrollmentDto, ProfessorEnrollmentDtoData, StudentEnrollmentDto, StudentEnrollmentDtoData } from '../dtos/EnrollmentDto.js';
+import { ProfessorEnrollmentDtoData, StudentEnrollmentDtoData } from '../dtos/EnrollmentDto.js';
 import { DocumentService } from '../services/DocumentService.js';
-import ProcessDocument from '../models/documents/ProcessDocument.js';
 
 export default {
     async saveDocumentsToTransactionalDatabase(req: Request, res: Response) {
