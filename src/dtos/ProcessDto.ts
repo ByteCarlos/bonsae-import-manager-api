@@ -5,7 +5,7 @@ import { SubjectDtoData } from "./SubjectDto";
 import { UserDtoData } from "./UserDto";
 
 export interface ProcessDto {
-    processId?: String;
+    processId: String;
     schoolPeriods: SchoolPeriodDtoData[];
     subjects: SubjectDtoData[];
     classes: ClassDtoData[];

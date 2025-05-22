@@ -11,6 +11,6 @@ export interface SubjectDtoData {
     endDate: Date,
     category: 'CURSO' | 'NPJ' | 'PROJETOS_EXTENSIONISTAS' | 'TCC',
     period?: '1' | '2'| '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10',
-    state?: string,
+    state?: number,
     campus?: string
 }

@@ -13,13 +13,13 @@ import { DocumentService } from '../services/DocumentService.js';
 export default {
     async saveDocumentsToTransactionalDatabase(req: Request, res: Response) {
         try {
-          const { schoolPeriodCode } = req.body.data;
+          const processId = req.params.id;
       
           const documentService = new DocumentService();
-          const processData = await documentService.createProcessData(schoolPeriodCode);
+          const processData = await documentService.bundleProcessData(processId);
       
           if (!processData) {
-            return res.status(404).json({ error: `Data not found for school period: ${schoolPeriodCode}` });
+            return res.status(404).json({ error: `Data not found for process: ${processId}` });
           }
 
           const transactionalService = new TransactionalService();

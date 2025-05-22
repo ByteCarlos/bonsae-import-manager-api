@@ -1,14 +1,10 @@
 import { Request, Response } from "express";
 import ProcessDocument from "../models/documents/ProcessDocument";
-import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument";
-import SubjectDocument from "../models/documents/SubjectDocument";
-import ClassDocument from "../models/documents/ClassDocument";
-import UserDocument from "../models/documents/UserDocument";
-import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument";
-import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument";
 import mongoose from "mongoose";
+import { DocumentService } from "../services/DocumentService";
 
 const allowedModels = ['Subject', 'Class', 'User', 'Professor_Enrollment', 'Student_Enrollment', 'School_Period'];
+const documentService = new DocumentService();
 
 export default {
   async createProcess(req: Request, res: Response) {
@@ -64,31 +60,7 @@ export default {
         return res.status(404).json({ error: "Process not found" });
       }
 
-      const [
-        schoolPeriods,
-        subjects,
-        classes,
-        users,
-        professorEnrollments,
-        studentEnrollments
-      ] = await Promise.all([
-        SchoolPeriodDocument.find({ processId }),
-        SubjectDocument.find({ processId }),
-        ClassDocument.find({ processId }),
-        UserDocument.find({ processId }),
-        ProfessorEnrollmentDocument.find({ processId }),
-        StudentEnrollmentDocument.find({ processId })
-      ]);
-
-      const data = {
-        process,
-        schoolPeriods,
-        subjects,
-        classes,
-        users,
-        professorEnrollments,
-        studentEnrollments
-      };
+      const data = documentService.bundleProcessData(processId);
 
       return res.status(200).json(data);
     } catch (error) {
@@ -134,6 +106,7 @@ export default {
     }
   },
 
+  /*
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const { processId } = req.params;
@@ -154,6 +127,7 @@ export default {
       return res.status(500).json({ error: (error as Error).message });
     }
   },
+  */
 
   async destroy(req: Request, res: Response) {
     try {

@@ -1,5 +1,5 @@
 import { ClassDtoData } from "../dtos/ClassDto";
-import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
+import { EnrollmentDtoData, ProfessorEnrollmentDtoData, StudentEnrollmentDtoData } from "../dtos/EnrollmentDto";
 import { ProcessDto } from "../dtos/ProcessDto";
 import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
 import { SubjectDtoData } from "../dtos/SubjectDto";
@@ -12,80 +12,50 @@ import SubjectDocument from "../models/documents/SubjectDocument";
 import UserDocument from "../models/documents/UserDocument";
 
 export class DocumentService {
-  async createProcessData(schoolPeriodCode: string): Promise<ProcessDto | null> {
-    const schoolPeriodDoc = await SchoolPeriodDocument.findOne({ code: schoolPeriodCode });
-
-    if (!schoolPeriodDoc) {
-      return null;
-    }
-
-    const subjectsDoc = await SubjectDocument.find({ periodId: schoolPeriodDoc.code });
-    const subjectsDtoData = subjectsDoc.flatMap(subjectDoc => subjectDoc as SubjectDtoData);
-    if (!subjectsDoc || subjectsDoc.length === 0) {
-      return null;
-    }
-
-    const classesDocs = await Promise.all(
-      subjectsDtoData.flatMap(subject => ClassDocument.find({ subjectCode: subject.code }))
-    );
-    if (!classesDocs || classesDocs.length === 0) {
-      return null;
-    }
-    const classesDtoData: ClassDtoData[] = classesDocs.flat().map(classDoc =>
-      classDoc as ClassDtoData
-    );
-
-    const [profEnrollmentDocsArray, studentEnrollmentDocsArray] = await Promise.all([
-      Promise.all(classesDtoData.map(classDtoData => ProfessorEnrollmentDocument.find({ classCode: classDtoData.code }))),
-      Promise.all(classesDtoData.map(classDtoData => StudentEnrollmentDocument.find({ classCode: classDtoData.code })))
+  async bundleProcessData(processId: string): Promise<ProcessDto> {
+    const [
+      schoolPeriods,
+      subjects,
+      classes,
+      users,
+      professorEnrollments,
+      studentEnrollments
+    ] = await Promise.all([
+      SchoolPeriodDocument.find({ processId }),
+      SubjectDocument.find({ processId }),
+      ClassDocument.find({ processId }),
+      UserDocument.find({ processId }),
+      ProfessorEnrollmentDocument.find({ processId }),
+      StudentEnrollmentDocument.find({ processId })
     ]);
-    
-    const profEnrollmentDocs = profEnrollmentDocsArray.flat();
-    const studentEnrollmentDocs = studentEnrollmentDocsArray.flat();
-    if (profEnrollmentDocs.length === 0 || studentEnrollmentDocs.length === 0) {
-      return null;
-    }
-    
-    const enrollmentsDtoData: EnrollmentDtoData[] = [
-      ...profEnrollmentDocs.map(enrollment => ({
+
+    const enrollments: EnrollmentDtoData[] = [
+      ...professorEnrollments.map(enrollment => ({
         subjectCode: enrollment.subjectCode,
         classCode: enrollment.classCode,
         email: enrollment.professorEmail ?? undefined,
         registrationNumber: enrollment.registrationNumber ?? undefined,
         professor: true
       })),
-      ...studentEnrollmentDocs.map(enrollment => ({
+      ...studentEnrollments.map(enrollment => ({
         subjectCode: enrollment.subjectCode,
         classCode: enrollment.classCode,
         email: enrollment.studentEmail ?? undefined,
         registrationNumber: enrollment.registrationNumber ?? undefined,
         professor: false
       }))
-    ];      
+    ];
 
-    const userDocs = await Promise.all(
-      enrollmentsDtoData.map(enrollment => UserDocument.find({
-        $or: [
-          { email: enrollment.email },
-          { registrationNumber: enrollment.registrationNumber }
-        ]
-      }))
-    );
-    if (!userDocs || userDocs.length === 0) {
-      return null;
-    }
+    console.log(schoolPeriods, subjects, classes, users, enrollments)
 
-    const usersDtoData: UserDtoData[] = userDocs.flat().map(userDoc => userDoc as UserDtoData);
-
-    const processData: ProcessDto = {
-      schoolPeriods: [schoolPeriodDoc as SchoolPeriodDtoData],
-      subjects: subjectsDtoData,
-      classes: classesDtoData,
-      users: usersDtoData,
-      enrollments: enrollmentsDtoData
+    return {
+      processId,
+      schoolPeriods: schoolPeriods as SchoolPeriodDtoData[],
+      subjects: subjects as SubjectDtoData[],
+      classes: classes as ClassDtoData[],
+      users: users as UserDtoData[],
+      enrollments,
     };
-
-    return processData;
   }
 }
 

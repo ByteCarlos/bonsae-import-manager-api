@@ -56,7 +56,6 @@ export class TransactionalService {
     }
     
     private async saveSchoolPeriods(schoolPeriods: SchoolPeriodDtoData[]) {
-        console.log(schoolPeriods);
         const entities = schoolPeriods.map((entry) => {
             let entity = new SchoolPeriodEntity();
             Object.assign(entity, {
