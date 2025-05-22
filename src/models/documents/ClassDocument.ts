@@ -19,4 +19,5 @@ const ClassSchema = new mongoose.Schema({
     }
 });
 
+ClassSchema.index({ code: 1, subjectRef: 1, processRef: 1 }, { unique: true })
 export default mongoose.model('Class', ClassSchema);

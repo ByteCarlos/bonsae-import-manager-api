@@ -24,4 +24,5 @@ const SubjectSchema = new mongoose.Schema({
     }
 });
 
+SubjectSchema.index({ code: 1, schoolPeriodRef: 1, processRef: 1 }, { unique: true })
 export default mongoose.model('Subject', SubjectSchema);

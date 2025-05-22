@@ -55,7 +55,7 @@ export default {
 
             const process = await ProcessDocument.findOne({ processId });
             if (!process) {
-            return res.status(404).json({ error: 'Process not found' });
+                return res.status(404).json({ error: 'Process not found' });
             }
             classData.processId = processId;
             classData.processRef = process._id;
@@ -100,9 +100,9 @@ export default {
 
             if (subjectCode) {
                 const subject = await SubjectDocument.findOne({ code: subjectCode, processId: processId });
-                if (!subject) return res.status(404).json({ error: 'Class not found' });
+                if (!subject) return res.status(404).json({ error: 'Subject not found' });
 
-                data.periodId = subjectCode;
+                data.subjectCode = subjectCode;
                 data.subjectRef = subject._id;
             }
 

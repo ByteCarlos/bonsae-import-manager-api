@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 import { Period } from '../../dtos/SchoolPeriodDto';
 
 const SchoolPeriodSchema = new Schema({
-    code: { type: String, required: true, unique: true },
+    code: { type: String, required: true },
     name: { type: String, enum: Period, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
@@ -15,4 +15,5 @@ const SchoolPeriodSchema = new Schema({
     },
 });
 
+SchoolPeriodSchema.index({ code: 1, processRef: 1 }, { unique: true });
 export default model('School_Period', SchoolPeriodSchema);

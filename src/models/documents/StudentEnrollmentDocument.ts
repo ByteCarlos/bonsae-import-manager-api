@@ -29,4 +29,5 @@ const StudentEnrollmentSchema = new mongoose.Schema({
     }
 });
 
+StudentEnrollmentSchema.index({ classRef: 1, registrationNumber: 1, studentEmail: 1, processRef: 1 }, { unique: true })
 export default mongoose.model('Student_Enrollment', StudentEnrollmentSchema);

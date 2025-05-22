@@ -53,7 +53,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    processId: { type: String, required: true },
+    processId: { 
+        type: String, 
+        required: true 
+    },
 
     processRef: {
         type: mongoose.Schema.Types.ObjectId,
@@ -62,4 +65,5 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
+UserSchema.index({ profileId: 1, name: 1 }, { unique: true })
 export default mongoose.model('User', UserSchema);

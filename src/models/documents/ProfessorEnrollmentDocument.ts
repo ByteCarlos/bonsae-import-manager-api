@@ -29,4 +29,5 @@ const ProfessorEnrollmentSchema = new mongoose.Schema({
     }
 });
 
+ProfessorEnrollmentSchema.index({ classRef: 1, registrationNumber: 1, professorEmail: 1, processRef: 1 }, { unique: true })
 export default mongoose.model('Professor_Enrollment', ProfessorEnrollmentSchema);

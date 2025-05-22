@@ -32,6 +32,6 @@ export interface UserDtoData {
     telephone?: string,
     cpf: string,
     password: string,
-    periodId?: 1 | 2| 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
+    periodId?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
     observations?: string
 }

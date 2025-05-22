@@ -3,12 +3,25 @@ import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollment
 import SubjectDocument from '../models/documents/SubjectDocument';
 import ClassDocument from '../models/documents/ClassDocument';
 import UserDocument from '../models/documents/UserDocument';
+import ProcessDocument from '../models/documents/ProcessDocument';
+import { ProfessorEnrollmentDtoData } from '../dtos/EnrollmentDto';
 
 export default {
     async storeBatch(req: Request, res: Response) {
         try {
+            const { processId, data } = req.body;
+
+            if (!processId || !Array.isArray(data)) {
+                return res.status(400).json({ error: "Missing or invalid 'processId' or 'data' in request body" });
+            }
+
+            const processDoc = await ProcessDocument.findOne({ processId });
+            if (!processDoc) {
+                return res.status(404).json({ error: "Process not found" });
+            }
+
             const enrollments = await Promise.all(
-                req.body.data.map(async (entry: any) => {            
+                req.body.data.map(async (entry: ProfessorEnrollmentDtoData) => {
                     const [subject, classDoc, user] = await Promise.all([
                         SubjectDocument.findOne({ code: entry.subjectCode }),
                         ClassDocument.findOne({ code: entry.classCode }),
@@ -38,7 +51,9 @@ export default {
                         ...entry,
                         subjectRef: subject._id,
                         classRef: classDoc._id,
-                        userRef: user._id
+                        userRef: user._id,
+                        processId: processDoc.processId,
+                        processRef: processDoc._id
                     });
                 })
             );            
@@ -52,7 +67,27 @@ export default {
     },
     async store(req: Request, res: Response) {
         try {
-            const enrollment = new ProfessorEnrollmentDocument(req.body.data);
+            const { processId } = req.body;
+            const enrollmentData = req.body.data;
+
+            const existingEnrollment = await ProfessorEnrollmentDocument.findOne({ 
+                subjectCode: enrollmentData.subjectCode, 
+                classCode: enrollmentData.classCode, 
+                registrationNumber: enrollmentData.registrationNumber, 
+                professorEmail: enrollmentData.professorEmail 
+            });
+            if (existingEnrollment) {
+                return res.status(409).json({ error: `Enrollment already created in this process`, enrollment: existingEnrollment });
+            }
+
+            const process = await ProcessDocument.findOne({ processId });
+            if (!process) {
+                return res.status(404).json({ error: 'Process not found' });
+            }
+            enrollmentData.processId = processId;
+            enrollmentData.processRef = process;
+
+            const enrollment = new ProfessorEnrollmentDocument(enrollmentData);
             const [subject, classDoc, user] = await Promise.all([
                 SubjectDocument.findOne({ code: enrollment.subjectCode }),
                 ClassDocument.findOne({ code: enrollment.classCode }),
@@ -88,7 +123,7 @@ export default {
     },
     async index(_req: Request, res: Response) {
         try {
-            const enrollments = await ProfessorEnrollmentDocument.find().populate('user class');
+            const enrollments = await ProfessorEnrollmentDocument.find().populate('userRef classRef subjectRef');
             return res.status(200).json(enrollments);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
@@ -96,7 +131,18 @@ export default {
     },
     async show(req: Request, res: Response) {
         try {
-            const enrollment = await ProfessorEnrollmentDocument.findById(req.params.id).populate('user class');
+            const data = req.body;
+            const conditions: any = {
+                processId: data.processId,
+                subjectCode: data.subjectCode,
+                classCode: data.classCode,
+                $or: [
+                    { professorEmail: data.professorEmail },
+                    { registrationNumber: data.registrationNumber }
+                ]
+            };
+
+            const enrollment = await ProfessorEnrollmentDocument.findOne(conditions).populate('userRef classRef subjectRef');
             if (!enrollment) return res.status(404).json({ error: 'Professor enrollment not found' });
             return res.status(200).json(enrollment);
         } catch (error) {
@@ -105,16 +151,72 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const enrollment = await ProfessorEnrollmentDocument.findByIdAndUpdate(req.params.id, req.body.data, { new: true });
-            if (!enrollment) return res.status(404).json({ error: 'Professor enrollment not found' });
-            return res.status(200).json(enrollment);
+            const { processId, subjectCode, classCode, professorEmail, registrationNumber } = req.body;
+
+            const enrollment = await ProfessorEnrollmentDocument.findOne({ _id: req.params.id, processId });
+            if (!enrollment) {
+                return res.status(404).json({ error: 'Professor enrollment not found' });
+            }
+
+            let classDoc = null;
+            if (classCode) {
+                classDoc = await ClassDocument.findOne({
+                    processId,
+                    subjectCode,
+                    code: classCode
+                }).populate('subjectRef');
+
+                if (!classDoc) {
+                    return res.status(404).json({ error: 'Class not found' });
+                }
+            }
+
+            let userDoc = null;
+            if (professorEmail?.trim() || registrationNumber?.trim()) {
+                userDoc = await UserDocument.findOne({
+                    processId,
+                    $or: [
+                        ...(professorEmail?.trim() ? [{ email: professorEmail }] : []),
+                        ...(registrationNumber?.trim() ? [{ registrationNumber }] : [])
+                    ]
+                });
+
+                if (!userDoc) {
+                    return res.status(404).json({ error: 'User not found' });
+                }
+            }
+
+            const updateData: any = {
+                processId,
+                subjectCode,
+            };
+
+            if (classCode) {
+                updateData.classCode = classCode;
+                updateData.classRef = classDoc?._id;
+                updateData.subjectRef = classDoc?.subjectRef;
+            }
+
+            if (professorEmail) updateData.professorEmail = professorEmail;
+            if (registrationNumber) updateData.registrationNumber = registrationNumber;
+            if (userDoc) updateData.userRef = userDoc._id;
+
+            const updated = await ProfessorEnrollmentDocument.findByIdAndUpdate(
+                enrollment._id,
+                updateData,
+                { new: true, runValidators: true }
+            );
+
+            return res.status(200).json(updated);
+
         } catch (error) {
+            console.error('Error updating professor enrollment:', error);
             return res.status(500).json({ error: (error as Error).message });
         }
     },
     async destroy(req: Request, res: Response) {
         try {
-            const enrollment = await ProfessorEnrollmentDocument.findByIdAndDelete(req.params.id);
+            const enrollment = await ProfessorEnrollmentDocument.findOneAndDelete({ _id: req.params.id, processId: req.body.processId });
             if (!enrollment) return res.status(404).json({ error: 'Enrollment not found' });
             return res.status(200).json({ message: 'Enrollment deleted successfully' });
         } catch (error) {
