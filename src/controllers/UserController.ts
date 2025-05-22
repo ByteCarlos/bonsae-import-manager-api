@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import UserDocument from '../models/documents/UserDocument';
 import ProcessDocument from '../models/documents/ProcessDocument';
 import { checkDuplicateUsers } from '../services/DocumentService';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument';
 
 export default {
     async storeBatch(req: Request, res: Response) {
@@ -73,7 +75,13 @@ export default {
     },
     async show(req: Request, res: Response) {
         try {
-            const user = await UserDocument.findOne({ profileId: req.body.profileId, name: req.body.name, processId: req.body.processId });
+            let user;
+            if (req.params.id) {
+                user = await UserDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                user = await UserDocument.findOne({ profileId: req.body.profileId, name: req.body.name, processId: req.body.processId });
+            }
+
             if (!user) return res.status(404).json({ error: 'User not found' });
             return res.status(200).json(user);
         } catch (error) {
@@ -83,9 +91,13 @@ export default {
     async update(req: Request, res: Response) {
         try {
             const { processId, ...data } = req.body;
-            const user = await UserDocument.findOneAndUpdate({ profileId: data.profileId, name: data.name, processId: processId }, data, { new: true, runValidators: true });
-            if (!user) return res.status(404).json({ error: 'User not found' });
-            return res.status(200).json(user);
+            const updatedUser = await UserDocument.findOneAndUpdate({ _id: req.params.id, processId: processId }, data, { new: true, runValidators: true });
+            if (!updatedUser) return res.status(404).json({ error: 'User not found' });
+
+            await ProfessorEnrollmentDocument.updateMany({ processId: processId, userRef: updatedUser?._id }, { $set: { registrationNumber: updatedUser.registrationNumber, professorEmail: updatedUser.email } });
+            await StudentEnrollmentDocument.updateMany({ processId: processId, userRef: updatedUser?._id }, { $set: { registrationNumber: updatedUser.registrationNumber, studentEmail: updatedUser.email } });
+
+            return res.status(200).json(updatedUser);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
         }

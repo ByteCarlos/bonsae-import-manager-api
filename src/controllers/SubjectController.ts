@@ -3,6 +3,9 @@ import SubjectDocument from '../models/documents/SubjectDocument';
 import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument';
 import ProcessDocument from '../models/documents/ProcessDocument';
 import { SubjectDtoData } from '../dtos/SubjectDto';
+import ClassDocument from '../models/documents/ClassDocument';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument';
 
 export default {
     async storeBatch(req: Request, res: Response) {
@@ -108,6 +111,12 @@ export default {
                 { new: true, runValidators: true }
             );
             if (!updatedSubject) return res.status(404).json({ error: 'Subject not found' });
+
+            if (updatedSubject.code != req.params.id) {
+                await ClassDocument.updateMany({ processId: processId, subjectRef: updatedSubject?._id }, { $set: { subjectCode: updatedSubject.code } });
+                await ProfessorEnrollmentDocument.updateMany({ processId: processId, subjectRef: updatedSubject?._id }, { $set: { subjectCode: updatedSubject.code } });
+                await StudentEnrollmentDocument.updateMany({ processId: processId, subjectRef: updatedSubject?._id }, { $set: { subjectCode: updatedSubject.code } });
+            }
 
             return res.status(200).json(updatedSubject);
         } catch (error) {

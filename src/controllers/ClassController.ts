@@ -3,6 +3,8 @@ import ClassDocument from '../models/documents/ClassDocument.js';
 import SubjectDocument from '../models/documents/SubjectDocument.js';
 import ProcessDocument from '../models/documents/ProcessDocument.js';
 import { ClassDtoData } from '../dtos/ClassDto.js';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
 
 export default {
     async storeBatch(req: Request, res: Response) {
@@ -112,6 +114,11 @@ export default {
                 { new: true, runValidators: true }
             );
             if (!updatedClass) return res.status(404).json({ error: 'Class not found' });
+
+            if (updatedClass.code != req.params.id) {
+                await ProfessorEnrollmentDocument.updateMany({ processId: processId, classRef: updatedClass?._id }, { $set: { classCode: updatedClass.code } });
+                await StudentEnrollmentDocument.updateMany({ processId: processId, classRef: updatedClass?._id }, { $set: { classCode: updatedClass.code } });
+            }
 
             return res.status(200).json(updatedClass);
         } catch (error) {

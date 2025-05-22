@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument.js';
 import ProcessDocument from '../models/documents/ProcessDocument.js';
 import { SchoolPeriodDtoData } from '../dtos/SchoolPeriodDto.js';
+import SubjectDocument from '../models/documents/SubjectDocument.js';
 
 export default {
     async storeBatch(req: Request, res: Response) {
@@ -84,6 +85,11 @@ export default {
             const { processId, ...data } = req.body;
             const schoolPeriod = await SchoolPeriodDocument.findOneAndUpdate({ code: req.params.id, processId: processId }, data, { new: true, runValidators: true });
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
+
+            if (schoolPeriod.code != req.params.id) {
+                await SubjectDocument.updateMany({ processId: processId, schoolPeriodRef: schoolPeriod?._id }, { $set: { periodId: schoolPeriod.code } });
+            }
+
             return res.status(200).json(schoolPeriod);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
