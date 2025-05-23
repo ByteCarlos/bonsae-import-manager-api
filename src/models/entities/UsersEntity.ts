@@ -19,19 +19,19 @@ export class UsersEntity {
   @Column({ type: 'int', name: 'id_audora', nullable: true })
   idAudora!: number;
 
-  @Column({ type: 'bigint', name: 'profile_id', nullable: true })
+  @Column({ type: 'bigint', name: 'profile_id', nullable: false })
   profileId!: number;
 
   @Column({ type: 'boolean', default: true, name: 'active', nullable: true })
   active!: boolean;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   name!: string;
 
   @Column({ type: 'varchar', length: 50, name: 'registration_number', nullable: true })
   registrationNumber!: string;
 
-  @Column({ type: 'varchar', length: 100, name: 'email', nullable: true })
+  @Column({ type: 'varchar', length: 100, name: 'email', nullable: false })
   email!: string;
 
   @Column({ type: 'boolean', default: false, name: 'receive_emails', nullable: true })
@@ -52,7 +52,7 @@ export class UsersEntity {
   @Column({ type: 'varchar', length: 20, name: 'telephone', nullable: true })
   telephone!: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'password', nullable: true })
+  @Column({ type: 'varchar', length: 255, name: 'password', nullable: false })
   password!: string;
 
   @Column({ type: 'varchar', length: 14, name: 'cpf', nullable: true })

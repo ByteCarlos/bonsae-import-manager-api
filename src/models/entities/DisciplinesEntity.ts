@@ -6,27 +6,24 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm';
-import { SchoolPeriodEntity } from './SchoolPeriodEntity';
 import { AcademicClassesEntity } from './AcademicClassesEntity';
 
 @Entity({ name: 'disciplines' })
+@Unique('unique_discipline', ['code'])
 export class DisciplinesEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: number;
-
-  @ManyToOne(() => SchoolPeriodEntity)
-  @JoinColumn({ name: 'school_period_id' })
-  schoolPeriod!: SchoolPeriodEntity;
 
   @ManyToOne(() => AcademicClassesEntity)
   @JoinColumn({ name: 'academic_classes_id' })
   academicClass!: AcademicClassesEntity;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: false })
   name!: string;
 
-  @Column({ type: 'varchar', length: 50, name: 'code', nullable: true })
+  @Column({ type: 'varchar', length: 50, name: 'code', nullable: false })
   code!: string;
 
   @Column({ type: 'varchar', length: 12, name: 'shift', nullable: true })

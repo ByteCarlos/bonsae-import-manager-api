@@ -1,10 +1,12 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  Unique
 } from 'typeorm';
 
 @Entity({ name: 'campus' })
+@Unique('unique_campus', ['name'])
 export class CampusEntity {
   @PrimaryGeneratedColumn()
   id!: number;

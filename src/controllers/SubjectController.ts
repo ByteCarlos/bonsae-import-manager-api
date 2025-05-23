@@ -86,7 +86,13 @@ export default {
     },
     async show(req: Request, res: Response) {
         try {
-            const subject = await SubjectDocument.findOne({ code: req.params.id, processId: req.body.processId });
+            let subject;
+            if (req.params.id) {
+                subject = await SubjectDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                subject = await SubjectDocument.findOne({ code: req.body.code, processId: req.body.processId });
+            }
+
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json(subject);
         } catch (error) {
@@ -125,7 +131,13 @@ export default {
     },
     async destroy(req: Request, res: Response) {
         try {
-            const subject = await SubjectDocument.findOneAndDelete({ code: req.params.id, processId: req.body.processId });
+            let subject;
+            if (req.params.id) {
+                subject = await SubjectDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                subject = await SubjectDocument.findOneAndDelete({ code: req.params.id, processId: req.body.processId });
+            }
+
             if (!subject) return res.status(404).json({ error: 'Subject not found' });
             return res.status(200).json({ message: 'Subject deleted successfully' });
         } catch (error) {

@@ -6,11 +6,13 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm';
 import { UsersEntity } from './UsersEntity';
 import { DisciplinesEntity } from './DisciplinesEntity';
 
 @Entity({ name: 'discipline_users' })
+@Unique('unique_discipline', ['user', 'discipline'])
 export class DisciplineUsersEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: number;
@@ -29,7 +31,7 @@ export class DisciplineUsersEntity {
   @Column({ type: 'boolean', default: false, name: 'temporary', nullable: true })
   temporary?: boolean;
 
-  @Column({ type: 'boolean', default: false, name: 'professor', nullable: true })
+  @Column({ type: 'boolean', default: false, name: 'professor', nullable: false })
   professor?: boolean;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: true })

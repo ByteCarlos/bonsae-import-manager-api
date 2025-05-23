@@ -1,5 +1,5 @@
 import { ClassDtoData } from "../dtos/ClassDto";
-import { EnrollmentDtoData, ProfessorEnrollmentDtoData, StudentEnrollmentDtoData } from "../dtos/EnrollmentDto";
+import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
 import { ProcessDto } from "../dtos/ProcessDto";
 import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
 import { SubjectDtoData } from "../dtos/SubjectDto";
@@ -45,8 +45,6 @@ export class DocumentService {
         professor: false
       }))
     ];
-
-    console.log(schoolPeriods, subjects, classes, users, enrollments)
 
     return {
       processId,

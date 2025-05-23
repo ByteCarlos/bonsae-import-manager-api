@@ -104,7 +104,13 @@ export default {
     },
     async destroy(req: Request, res: Response) {
         try {
-            const user = await UserDocument.findOneAndDelete({ profileId: req.body.profileId, name: req.body.name, processId: req.body.processId });
+            let user;
+            if (req.params.id) {
+                user = await UserDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                user =  await UserDocument.findOneAndDelete({ profileId: req.body.profileId, name: req.body.name, processId: req.body.processId });
+            }
+
             if (!user) return res.status(404).json({ error: 'User not found' });
             return res.status(200).json({ message: 'User deleted successfully' });
         } catch (error) {

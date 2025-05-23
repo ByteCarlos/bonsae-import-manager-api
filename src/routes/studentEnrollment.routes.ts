@@ -7,7 +7,7 @@ const router = Router();
 router.post('/batch', asyncHandler(StudentEnrollmentController.storeBatch));
 router.post('/', asyncHandler(StudentEnrollmentController.store));
 router.get('/', asyncHandler(StudentEnrollmentController.index));
-router.get('/:id', asyncHandler(StudentEnrollmentController.show));
+router.get('/get-one/:id?', asyncHandler(StudentEnrollmentController.show));
 router.put('/:id', asyncHandler(StudentEnrollmentController.update));
 router.delete('/:id', asyncHandler(StudentEnrollmentController.destroy));
 

@@ -6,11 +6,13 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  Unique,
 } from 'typeorm';
 import { SchoolPeriodEntity } from './SchoolPeriodEntity';
 import { CampusEntity } from './CampusEntity';
 
 @Entity({ name: 'academic_classes' })
+@Unique('unique_academic_classes', ['code'])
 export class AcademicClassesEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   id!: number;
@@ -19,19 +21,19 @@ export class AcademicClassesEntity {
   @JoinColumn({ name: 'school_period_id' })
   schoolPeriod!: SchoolPeriodEntity;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: false })
   name!: string;
 
-  @Column({ type: 'varchar', name: 'code', nullable: true, unique: true })
+  @Column({ type: 'varchar', name: 'code', nullable: false, unique: true })
   code!: string;
 
-  @Column({ type: 'date', name: 'start_date', nullable: true })
+  @Column({ type: 'date', name: 'start_date', nullable: false })
   startDate!: Date;
 
-  @Column({ type: 'date', name: 'end_date', nullable: true })
+  @Column({ type: 'date', name: 'end_date', nullable: false })
   endDate!: Date;
 
-  @Column({ type: 'varchar', length: 100, name: 'category', nullable: true })
+  @Column({ type: 'varchar', length: 100, name: 'category', nullable: false })
   category!: string;
 
   @Column({ type: 'varchar', length: 100, name: 'course', nullable: true })

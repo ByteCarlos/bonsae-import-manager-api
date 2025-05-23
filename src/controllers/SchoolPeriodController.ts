@@ -72,7 +72,13 @@ export default {
 
     async show(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findOne({ code: req.params.id, processId: req.body.processId });
+            let schoolPeriod;
+            if (req.params.id) {
+                schoolPeriod = await SchoolPeriodDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                schoolPeriod = await SchoolPeriodDocument.findOne({ code: req.body.code, processId: req.body.processId });
+            }
+
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json(schoolPeriod);
         } catch (error) {
@@ -98,7 +104,13 @@ export default {
 
     async destroy(req: Request, res: Response) {
         try {
-            const schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ code: req.params.id, processId: req.body.processId });
+            let schoolPeriod;
+            if (req.params.id) {
+                schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                schoolPeriod = await SchoolPeriodDocument.findOneAndDelete({ code: req.body.code, processId: req.body.processId });
+            }
+
             if (!schoolPeriod) return res.status(404).json({ error: 'School period not found' });
             return res.status(200).json({ message: 'School period deleted successfully' });
         } catch (error) {

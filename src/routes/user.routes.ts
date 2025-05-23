@@ -9,6 +9,6 @@ router.post('/', asyncHandler(UserController.store));
 router.get('/', asyncHandler(UserController.index));
 router.get('/get-one/:id?', asyncHandler(UserController.show));
 router.put('/:id', asyncHandler(UserController.update));
-router.delete('/delete', asyncHandler(UserController.destroy));
+router.delete('/delete/:id?', asyncHandler(UserController.destroy));
 
 export default router;

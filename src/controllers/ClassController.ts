@@ -87,10 +87,16 @@ export default {
     },
 
     async show(req: Request, res: Response) {
-        try { 
-            const classData = await ClassDocument.findOne({ code: req.params.id, processId: req.body.processId });
-            if (!classData) return res.status(404).json({ error: 'Class not found' });
-            return res.status(200).json(classData);
+        try {
+            let classDoc;
+            if (req.params.id) {
+                classDoc = await ClassDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                classDoc = await ClassDocument.findOne({ code: req.body.code, processId: req.body.processId });
+            }
+
+            if (!classDoc) return res.status(404).json({ error: 'Class not found' });
+            return res.status(200).json(classDoc);
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });
         }
@@ -128,8 +134,14 @@ export default {
 
     async destroy(req: Request, res: Response) {
         try {
-            const classData = await ClassDocument.findOneAndDelete({ code: req.params.id, processId: req.body.processId });
-            if (!classData) return res.status(404).json({ error: 'Class not found' });
+            let classDoc;
+            if (req.params.id) {
+                classDoc = await ClassDocument.findOneAndDelete({ processId: req.body.processId, _id: req.params.id });
+            } else {
+                classDoc = await ClassDocument.findOneAndDelete({ code: req.body.code, processId: req.body.processId });
+            }
+
+            if (!classDoc) return res.status(404).json({ error: 'Class not found' });
             return res.status(200).json({ message: 'Class deleted successfully' });
         } catch (error) {
             return res.status(500).json({ error: (error as Error).message });

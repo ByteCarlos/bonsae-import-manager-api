@@ -41,8 +41,7 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
-        select: false
+        required: true
     },
     periodId: {
         type: Number,

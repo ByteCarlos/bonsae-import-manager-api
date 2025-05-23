@@ -32,7 +32,7 @@ export default {
     },
     async saveData(req: Request, res: Response) {
         try {
-            const studentEnrollments = req.body.data.data.studentsEnrollments.map(
+            const studentEnrollments = req.body.data.studentsEnrollments.map(
             (studentEnrollment: StudentEnrollmentDtoData) => ({
                 ...studentEnrollment,
                 email: studentEnrollment.studentEmail,
@@ -40,7 +40,7 @@ export default {
             })
             );
 
-            const professorEnrollments = req.body.data.data.professorEnrollments.map(
+            const professorEnrollments = req.body.data.professorEnrollments.map(
             (professorEnrollment: ProfessorEnrollmentDtoData) => ({
                 ...professorEnrollment,
                 email: professorEnrollment.professorEmail,
@@ -50,7 +50,7 @@ export default {
 
             const enrollments = [...studentEnrollments, ...professorEnrollments];
 
-            const processData: ProcessDto = req.body.data.data;
+            const processData: ProcessDto = req.body.data;
             processData.enrollments = enrollments;
 
             const transactionalService = new TransactionalService();

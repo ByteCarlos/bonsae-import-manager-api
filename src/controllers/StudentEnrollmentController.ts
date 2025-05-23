@@ -132,6 +132,13 @@ export default {
     async show(req: Request, res: Response) {
         try {
             const data = req.body;
+
+            let enrollment;
+            if (req.params.id) {
+                enrollment = await StudentEnrollmentDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+                return res.status(200).json(enrollment);
+            }
+
             const conditions: any = {
                 processId: data.processId,
                 subjectCode: data.subjectCode,
@@ -142,7 +149,7 @@ export default {
                 ]
             };
 
-            const enrollment = await StudentEnrollmentDocument.findOne(conditions).populate('userRef classRef subjectRef');
+            enrollment = await StudentEnrollmentDocument.findOne(conditions).populate('userRef classRef subjectRef');
             if (!enrollment) return res.status(404).json({ error: 'Student enrollment not found' });
             return res.status(200).json(enrollment);
         } catch (error) {
