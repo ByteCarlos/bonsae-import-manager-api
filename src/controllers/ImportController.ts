@@ -9,6 +9,7 @@ import { TransactionalService } from '../services/TransactionalService.js';
 import { ProcessDto } from '../dtos/ProcessDto.js';
 import { ProfessorEnrollmentDtoData, StudentEnrollmentDtoData } from '../dtos/EnrollmentDto.js';
 import { DocumentService } from '../services/DocumentService.js';
+import { AppDataSource } from '../connection/mysqlConnection.js';
 
 export default {
     async saveDocumentsToTransactionalDatabase(req: Request, res: Response) {
@@ -22,7 +23,7 @@ export default {
             return res.status(404).json({ error: `Data not found for process: ${processId}` });
           }
 
-          const transactionalService = new TransactionalService();
+          const transactionalService = new TransactionalService(AppDataSource);
           const processEntities = await transactionalService.completeImport(processData);
       
           return res.status(200).json(processEntities);
@@ -53,7 +54,7 @@ export default {
             const processData: ProcessDto = req.body.data;
             processData.enrollments = enrollments;
 
-            const transactionalService = new TransactionalService();
+            const transactionalService = new TransactionalService(AppDataSource);
             const processEntities = await transactionalService.completeImport(processData);
 
             return res.status(201).json(processEntities);

@@ -6,6 +6,7 @@ import { CampusEntity } from '../models/entities/CampusEntity';
 import { DisciplinesEntity } from '../models/entities/DisciplinesEntity';
 import { UsersEntity } from '../models/entities/UsersEntity';
 import { DisciplineUsersEntity } from '../models/entities/DisciplineUsersEntity';
+import { TransactionalService } from '../services/TransactionalService';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -20,8 +21,9 @@ export const AppDataSource = new DataSource({
 });
 
 AppDataSource.initialize()
-    .then(() => {
+    .then(async () => {
         console.log('Data Source has been initialized successfully.');
+        const transactionalService = new TransactionalService(AppDataSource);
     })
     .catch((error) => {
         console.error('Error during Data Source initialization:', error);

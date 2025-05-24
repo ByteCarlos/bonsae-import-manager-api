@@ -1,4 +1,3 @@
-import { AppDataSource } from "../connection/mysqlConnection";
 import { ProcessDto } from "../dtos/ProcessDto";
 import { ClassDtoData } from "../dtos/ClassDto";
 import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
@@ -11,53 +10,48 @@ import { DisciplinesEntity } from "../models/entities/DisciplinesEntity";
 import { DisciplineUsersEntity } from "../models/entities/DisciplineUsersEntity";
 import { SchoolPeriodEntity } from "../models/entities/SchoolPeriodEntity";
 import { UsersEntity } from "../models/entities/UsersEntity";
+import { DataSource, EntityManager } from "typeorm";
 
 export class TransactionalService {
-    private schoolPeriodRepository;
-    private academicClassesRepository;
-    private campusRepository;
-    private disciplinesRepository;
-    private usersRepository;
-    private disciplineUsersRepository;
-
-    constructor() {
-        this.schoolPeriodRepository = AppDataSource.getRepository(SchoolPeriodEntity);
-        this.academicClassesRepository = AppDataSource.getRepository(AcademicClassesEntity);
-        this.campusRepository = AppDataSource.getRepository(CampusEntity);
-        this.disciplinesRepository = AppDataSource.getRepository(DisciplinesEntity)
-        this.usersRepository = AppDataSource.getRepository(UsersEntity);
-        this.disciplineUsersRepository = AppDataSource.getRepository(DisciplineUsersEntity);
-    }
-
-    private async findOrCreateCampus(campusName: string): Promise<CampusEntity> {
-        let campus = await this.campusRepository.findOne({ where: { name: campusName } });
-    
-        if (!campus) {
-            campus = await this.campusRepository.save({ name: campusName });
-        }
-    
-        return campus;
-    }
+    constructor(private readonly dataSource: DataSource) { }
 
     async completeImport(processData: ProcessDto) {
-        const schoolPeriods = await this.saveSchoolPeriods(processData.schoolPeriods);
-        const academicClasses = await this.saveAcademicClasses(processData.subjects);
-        const disciplines = await this.saveDisciplines(processData.classes);
-        const users = await this.saveUsers(processData.users);
-        const disciplineUsers = await this.saveDisciplineUsers(processData.enrollments)
-        
-        return {
-            schoolPeriodsEntities: schoolPeriods,
-            academicClassesEntities: academicClasses,
-            disciplinesEntities: disciplines,
-            usersEntities: users,
-            disciplineUsersEntities: disciplineUsers
-        };
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+
+        try {
+            const schoolPeriods = await this.saveSchoolPeriods(processData.schoolPeriods, queryRunner.manager);
+            const academicClasses = await this.saveAcademicClasses(processData.subjects, queryRunner.manager);
+            const disciplines = await this.saveDisciplines(processData.classes, queryRunner.manager);
+            const users =  await this.saveUsers(processData.users, queryRunner.manager);
+            const disciplineUsers = await this.saveDisciplineUsers(processData.enrollments, queryRunner.manager);
+
+            await queryRunner.commitTransaction();
+
+            return {
+                schoolPeriodsEntities: schoolPeriods,
+                academicClassesEntities: academicClasses,
+                disciplinesEntities: disciplines,
+                usersEntities: users,
+                disciplineUsersEntities: disciplineUsers
+            };
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+            console.error('Error persisting data, transaction rolled back:', error);
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
     }
     
-    private async saveSchoolPeriods(schoolPeriods: SchoolPeriodDtoData[]) {
-        const entities = await Promise.all(schoolPeriods.map(async (entry) => {
-            let entity = await this.schoolPeriodRepository.findOne({ where: { code: entry.code } });
+    private async saveSchoolPeriods(
+        schoolPeriods: SchoolPeriodDtoData[],
+        manager: EntityManager
+    ): Promise<SchoolPeriodEntity[]> {
+        const entities = await Promise.all(
+            schoolPeriods.map(async (entry) => {
+            let entity = await manager.findOne(SchoolPeriodEntity, { where: { code: entry.code } });
             if (entity) {
                 return entity;
             }
@@ -67,60 +61,81 @@ export class TransactionalService {
                 code: entry.code,
                 name: entry.name,
                 startDate: entry.startDate,
-                endDate: entry.endDate
+                endDate: entry.endDate,
             });
 
-            return this.schoolPeriodRepository.save(entity);
-        }));
+            return manager.save(SchoolPeriodEntity, entity);
+            })
+        );
+
         return entities;
     }
     
-    private async saveAcademicClasses(subjects: SubjectDtoData[]) {
+    private async findOrCreateCampus(
+        campusName: string,
+        manager: EntityManager
+    ): Promise<CampusEntity> {
+        let campus = await manager.findOne(CampusEntity, { where: { name: campusName } });
+
+        if (!campus) {
+            campus = await manager.save(CampusEntity, { name: campusName });
+        }
+
+        return campus;
+    }
+
+    private async saveAcademicClasses(
+        subjects: SubjectDtoData[],
+        manager: EntityManager
+    ): Promise<AcademicClassesEntity[]> {
         const entities = await Promise.all(
             subjects.map(async (entry) => {
-                let entity = await this.academicClassesRepository.findOne({ where: { code: entry.code }});
-                if (entity) {
-                    return entity;
-                }
-                
-                entity = new AcademicClassesEntity();
-                Object.assign(entity, {
-                    name: entry.name ?? '',
-                    code: entry.code,
-                    startDate: entry.startDate,
-                    endDate: entry.endDate,
-                    category: entry.category,
-                    period: entry.period ?? '',
-                    active: entry.state
+            let entity = await manager.findOne(AcademicClassesEntity, { where: { code: entry.code } });
+            if (entity) {
+                return entity;
+            }
+
+            entity = new AcademicClassesEntity();
+            Object.assign(entity, {
+                name: entry.name ?? '',
+                code: entry.code,
+                startDate: entry.startDate,
+                endDate: entry.endDate,
+                category: entry.category,
+                period: entry.period ?? '',
+                active: entry.state
+            });
+
+            if (entry.campus) {
+                entity.campus = await this.findOrCreateCampus('Main Campus', manager);
+            }
+
+            if (entry.periodId) {
+                const schoolPeriod = await manager.findOne(SchoolPeriodEntity, {
+                where: { code: entry.periodId }
                 });
-    
-                if (entry.campus) {
-                    entity.campus = await this.findOrCreateCampus(entry.campus);
+
+                if (!schoolPeriod) {
+                throw new Error(`School period with id "${entry.periodId}" not found.`);
                 }
-    
-                if (entry.periodId) {
-                    const schoolPeriod = await this.schoolPeriodRepository.findOne({
-                        where: { code: entry.periodId }
-                    });
-    
-                    if (!schoolPeriod) {
-                        throw new Error(`School period with id "${entry.periodId}" not found.`);
-                    }
-    
-                    entity.schoolPeriod = schoolPeriod;
-                }
-    
-                return this.academicClassesRepository.save(entity);
+
+                entity.schoolPeriod = schoolPeriod;
+            }
+
+            return manager.save(AcademicClassesEntity, entity);
             })
         );
-    
+
         return entities;
     }
 
-    private async saveDisciplines(classes: ClassDtoData[]) {
+    private async saveDisciplines(
+        classes: ClassDtoData[],
+        manager: EntityManager
+    ): Promise<DisciplinesEntity[]> {
         const entities = await Promise.all(
             classes.map(async (entry) => {
-                let entity = await this.disciplinesRepository.findOne({ where: { code: entry.code }});
+                let entity = await manager.findOne(DisciplinesEntity, { where: { code: entry.code } });
                 if (entity) {
                     return entity;
                 }
@@ -131,31 +146,36 @@ export class TransactionalService {
                     code: entry.code,
                     shift: entry.shift
                 });
-    
+
                 if (entry.subjectCode) {
-                    const academicClass = await this.academicClassesRepository.findOne({
+                    const academicClass = await manager.findOne(AcademicClassesEntity, {
                         where: { code: entry.subjectCode }
                     });
-    
+
                     if (!academicClass) {
                         throw new Error(`Academic class not found for code: "${entry.subjectCode}"`);
                     }
-    
+
                     entity.academicClass = academicClass;
                 }
-                
-                return this.disciplinesRepository.save(entity);
+
+                return manager.save(DisciplinesEntity, entity);
             })
         );
-    
+
         return entities;
     }
 
-    private async saveUsers(users: UserDtoData[]) {
+    private async saveUsers(
+        users: UserDtoData[],
+        manager: EntityManager
+    ): Promise<UsersEntity[]> {
         const entities = await Promise.all(users.map(async (entry) => {
-            let entity = await this.usersRepository.findOne({
+            const profileId = UserProfileMap[entry.profileId];
+
+            let entity = await manager.findOne(UsersEntity, {
                 where: {
-                    profileId: UserProfileMap[entry.profileId],
+                    profileId,
                     name: entry.name,
                     registrationNumber: entry.registrationNumber,
                     email: entry.email
@@ -168,7 +188,7 @@ export class TransactionalService {
 
             entity = new UsersEntity();
             Object.assign(entity, {
-                profileId: UserProfileMap[entry.profileId],
+                profileId,
                 name: entry.name,
                 oab: entry.oab ?? null,
                 oabUf: entry.oabUf ?? null,
@@ -182,40 +202,42 @@ export class TransactionalService {
                 active: true
             });
 
-            return this.usersRepository.save(entity);
+            return manager.save(UsersEntity, entity);
         }));
 
         return entities;
     }
 
-    private async saveDisciplineUsers(enrollments: EnrollmentDtoData[]) {
+    private async saveDisciplineUsers(
+        enrollments: EnrollmentDtoData[],
+        manager: EntityManager
+    ): Promise<DisciplineUsersEntity[]> {
         const entities = await Promise.all(
             enrollments.map(async (entry) => {
                 const entity = new DisciplineUsersEntity();
                 Object.assign(entity, {
                     professor: entry.professor,
                 });
-                
+
                 if (entry.registrationNumber || entry.email) {
-                    const user = await this.usersRepository.findOne({
+                    const user = await manager.findOne(UsersEntity, {
                         where: [
                             { registrationNumber: entry.registrationNumber },
                             { email: entry.email }
                         ]
-                    });              
-                    console.log(user);      
-                        
+                    });
+
                     if (!user) {
-                        throw new Error(`User not found for registration number "${entry.registrationNumber}" and email ${entry.email}`);
+                        throw new Error(`User not found for registration number "${entry.registrationNumber}" and email "${entry.email}"`);
                     }
 
                     entity.user = user;
                 }
 
                 if (entry.classCode) {
-                    const discipline = await this.disciplinesRepository.findOne(({
+                    const discipline = await manager.findOne(DisciplinesEntity, {
                         where: { code: entry.classCode }
-                    }));
+                    });
 
                     if (!discipline) {
                         throw new Error(`Discipline not found for class code "${entry.classCode}"`);
@@ -224,7 +246,7 @@ export class TransactionalService {
                     entity.discipline = discipline;
                 }
 
-                let existingEntity = await this.disciplineUsersRepository.findOne({
+                const existingEntity = await manager.findOne(DisciplineUsersEntity, {
                     where: {
                         user: entity.user,
                         discipline: entity.discipline
@@ -235,10 +257,10 @@ export class TransactionalService {
                     return existingEntity;
                 }
 
-                return this.disciplineUsersRepository.save(entity);
+                return manager.save(DisciplineUsersEntity, entity);
             })
         );
-    
+
         return entities;
     }
 }
