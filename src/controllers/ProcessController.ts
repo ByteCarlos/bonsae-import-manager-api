@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import ProcessDocument from "../models/documents/ProcessDocument";
 import mongoose from "mongoose";
 import { DocumentService } from "../services/DocumentService";
+import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument";
+import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument";
+import UserDocument from "../models/documents/UserDocument";
+import ClassDocument from "../models/documents/ClassDocument";
+import SubjectDocument from "../models/documents/SubjectDocument";
+import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument";
 
 const allowedModels = ['Subject', 'Class', 'User', 'Professor_Enrollment', 'Student_Enrollment', 'School_Period'];
 const documentService = new DocumentService();
@@ -132,6 +138,16 @@ export default {
   async destroy(req: Request, res: Response) {
     try {
       const { processId } = req.params;
+
+      await Promise.all([
+        ProfessorEnrollmentDocument.deleteMany({ processId: processId }),
+        StudentEnrollmentDocument.deleteMany({ processId: processId }),
+        UserDocument.deleteMany({ processId: processId }),
+        ClassDocument.deleteMany({ processId: processId }),
+        SubjectDocument.deleteMany({ processId: processId }),
+        SchoolPeriodDocument.deleteMany({ processId: processId })
+      ]);
+
       const process = await ProcessDocument.findOneAndDelete({ processId: processId });
       if (!process) return res.status(404).json({ error: 'Process not found' });
       return res.status(200).json({ message: 'Process deleted successfully' });
