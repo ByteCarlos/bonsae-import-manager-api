@@ -1,1 +1,0 @@
-{"version":3,"file":"ProcessDocument.js","sourceRoot":"","sources":["../../../../src/models/documents/ProcessDocument.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,UAAU,CAAC;AAEhC,MAAM,aAAa,GAAG,IAAI,QAAQ,CAAC,MAAM,CAAC;IACtC,SAAS,EAAE,EAAE,IAAI,EAAE,MAAM,EAAE,QAAQ,EAAE,IAAI,EAAE,MAAM,EAAE,IAAI,EAAE;CAC5D,CAAC,CAAC;AAEH,eAAe,QAAQ,CAAC,KAAK,CAAC,SAAS,EAAE,aAAa,CAAC,CAAC"}

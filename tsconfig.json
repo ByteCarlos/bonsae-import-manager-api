@@ -9,7 +9,7 @@
       "sourceMap": true /* Gera mapas de origem para facilitar a depuração. */,
       "outDir": "./dist" /* Redireciona a saída dos arquivos compilados para a pasta 'dist'. */,
       "rootDir": "./" /* Define o diretório raiz dos arquivos de entrada como 'src', separando o código-fonte da saída. */,
-      "removeComments": true /* Remove comentários no código compilado, mantendo o código gerado mais limpo. */,
+      "removeComments": false /* Remove comentários no código compilado, mantendo o código gerado mais limpo. */,
       "strict": true /* Habilita todas as verificações de tipos estritos. Importante para manter a robustez da API. */,
   
       /* Verificações Adicionais */

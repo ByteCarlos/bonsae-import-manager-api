@@ -6,7 +6,6 @@ const ClassSchema = new mongoose.Schema({
     name: { type: String, required: true },
     code: { type: String, required: true },
     processId: { type: String, required: true },
-
     processRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Process',

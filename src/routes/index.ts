@@ -7,7 +7,9 @@ import SubjectRoutes from './subject.routes.js';
 import UserRoutes from './user.routes.js';
 import ImportRoutes from './import.routes.js';
 import SchoolPeriodRoutes from './schoolPeriod.routes.js';
-import ProcessRoutes from './process.routes.js'
+import ProcessRoutes from './process.routes.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../swagger.js';
 
 const routes = Router();
 
@@ -19,5 +21,6 @@ routes.use('/subject', SubjectRoutes);
 routes.use('/user', UserRoutes);
 routes.use('/import', ImportRoutes);
 routes.use('/process', ProcessRoutes);
+routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default routes;
