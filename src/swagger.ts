@@ -1,5 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import { swaggerPaths } from './docs/swaggerPaths';
+import { swaggerPaths } from './docs/swaggerPaths.js';
 
 const options = {
   definition: {
