@@ -22,10 +22,10 @@ routes.use('/user', UserRoutes);
 routes.use('/import', ImportRoutes);
 routes.use('/process', ProcessRoutes);
 routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css',
+  customCssUrl: '../../public/swagger-ui.css',
   customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'
+    '../../public/swagger-ui-bundle.js',
+    '../../public/swagger-ui-standalone-preset.js'
   ]
 }));
 
