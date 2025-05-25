@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   Unique,
 } from 'typeorm';
-import { Period } from '../../dtos/SchoolPeriodDto';
+import { Period } from '../../dtos/SchoolPeriodDto.js';
 
 @Entity({ name: 'school_periods' })
 @Unique('unique_period', ['code'])

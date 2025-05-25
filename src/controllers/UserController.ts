@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import UserDocument from '../models/documents/UserDocument';
-import ProcessDocument from '../models/documents/ProcessDocument';
-import { checkDuplicateUsers } from '../services/DocumentService';
-import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument';
-import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument';
+import UserDocument from '../models/documents/UserDocument.js';
+import ProcessDocument from '../models/documents/ProcessDocument.js';
+import { checkDuplicateUsers } from '../services/DocumentService.js';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
 
 export default {
     async storeBatch(req: Request, res: Response) {

@@ -17,7 +17,7 @@ services:
     container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: bonsae.import.db
+      MYSQL_DATABASE: bonsae-import
     ports:
       - "3306:3306"
     volumes:

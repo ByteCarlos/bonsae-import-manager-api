@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { SchoolPeriodEntity } from '../models/entities/SchoolPeriodEntity';
-import { AcademicClassesEntity } from '../models/entities/AcademicClassesEntity';
-import { CampusEntity } from '../models/entities/CampusEntity';
-import { DisciplinesEntity } from '../models/entities/DisciplinesEntity';
-import { UsersEntity } from '../models/entities/UsersEntity';
-import { DisciplineUsersEntity } from '../models/entities/DisciplineUsersEntity';
-import { TransactionalService } from '../services/TransactionalService';
+import { SchoolPeriodEntity } from '../models/entities/SchoolPeriodEntity.js';
+import { AcademicClassesEntity } from '../models/entities/AcademicClassesEntity.js';
+import { CampusEntity } from '../models/entities/CampusEntity.js';
+import { DisciplinesEntity } from '../models/entities/DisciplinesEntity.js';
+import { UsersEntity } from '../models/entities/UsersEntity.js';
+import { DisciplineUsersEntity } from '../models/entities/DisciplineUsersEntity.js';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -23,7 +22,6 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
     .then(async () => {
         console.log('Data Source has been initialized successfully.');
-        const transactionalService = new TransactionalService(AppDataSource);
     })
     .catch((error) => {
         console.error('Error during Data Source initialization:', error);

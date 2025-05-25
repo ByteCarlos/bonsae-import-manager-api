@@ -1,8 +1,8 @@
-import { ClassDtoData } from "./ClassDto";
-import { EnrollmentDtoData } from "./EnrollmentDto";
-import { SchoolPeriodDtoData } from "./SchoolPeriodDto";
-import { SubjectDtoData } from "./SubjectDto";
-import { UserDtoData } from "./UserDto";
+import { ClassDtoData } from "./ClassDto.js";
+import { EnrollmentDtoData } from "./EnrollmentDto.js";
+import { SchoolPeriodDtoData } from "./SchoolPeriodDto.js";
+import { SubjectDtoData } from "./SubjectDto.js";
+import { UserDtoData } from "./UserDto.js";
 
 export interface ProcessDto {
     processId: String;

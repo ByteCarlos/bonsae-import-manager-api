@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument';
-import SubjectDocument from '../models/documents/SubjectDocument';
-import ClassDocument from '../models/documents/ClassDocument';
-import UserDocument from '../models/documents/UserDocument';
-import ProcessDocument from '../models/documents/ProcessDocument';
-import { ProfessorEnrollmentDtoData } from '../dtos/EnrollmentDto';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
+import SubjectDocument from '../models/documents/SubjectDocument.js';
+import ClassDocument from '../models/documents/ClassDocument.js';
+import UserDocument from '../models/documents/UserDocument.js';
+import ProcessDocument from '../models/documents/ProcessDocument.js';
+import { ProfessorEnrollmentDtoData } from '../dtos/EnrollmentDto.js';
 
 export default {
     async storeBatch(req: Request, res: Response) {

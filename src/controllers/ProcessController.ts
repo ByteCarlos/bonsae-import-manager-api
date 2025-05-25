@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import ProcessDocument from "../models/documents/ProcessDocument";
+import ProcessDocument from "../models/documents/ProcessDocument.js";
 import mongoose from "mongoose";
-import { DocumentService } from "../services/DocumentService";
-import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument";
-import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument";
-import UserDocument from "../models/documents/UserDocument";
-import ClassDocument from "../models/documents/ClassDocument";
-import SubjectDocument from "../models/documents/SubjectDocument";
-import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument";
+import { DocumentService } from "../services/DocumentService.js";
+import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument.js";
+import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument.js";
+import UserDocument from "../models/documents/UserDocument.js";
+import ClassDocument from "../models/documents/ClassDocument.js";
+import SubjectDocument from "../models/documents/SubjectDocument.js";
+import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument.js";
 
 const allowedModels = ['Subject', 'Class', 'User', 'Professor_Enrollment', 'Student_Enrollment', 'School_Period'];
 const documentService = new DocumentService();

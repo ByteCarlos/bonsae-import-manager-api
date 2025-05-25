@@ -1,15 +1,15 @@
-import { ClassDtoData } from "../dtos/ClassDto";
-import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
-import { ProcessDto } from "../dtos/ProcessDto";
-import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
-import { SubjectDtoData } from "../dtos/SubjectDto";
-import { UserDtoData } from "../dtos/UserDto";
-import ClassDocument from "../models/documents/ClassDocument";
-import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument";
-import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument";
-import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument";
-import SubjectDocument from "../models/documents/SubjectDocument";
-import UserDocument from "../models/documents/UserDocument";
+import { ClassDtoData } from "../dtos/ClassDto.js";
+import { EnrollmentDtoData } from "../dtos/EnrollmentDto.js";
+import { ProcessDto } from "../dtos/ProcessDto.js";
+import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto.js";
+import { SubjectDtoData } from "../dtos/SubjectDto.js";
+import { UserDtoData } from "../dtos/UserDto.js";
+import ClassDocument from "../models/documents/ClassDocument.js";
+import ProfessorEnrollmentDocument from "../models/documents/ProfessorEnrollmentDocument.js";
+import SchoolPeriodDocument from "../models/documents/SchoolPeriodDocument.js";
+import StudentEnrollmentDocument from "../models/documents/StudentEnrollmentDocument.js";
+import SubjectDocument from "../models/documents/SubjectDocument.js";
+import UserDocument from "../models/documents/UserDocument.js";
 
 export class DocumentService {
   async bundleProcessData(processId: string): Promise<ProcessDto> {

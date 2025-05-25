@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
-import { Period } from '../../dtos/SchoolPeriodDto';
+import { Period } from '../../dtos/SchoolPeriodDto.js';
 
 const SchoolPeriodSchema = new Schema({
     code: { type: String, required: true },

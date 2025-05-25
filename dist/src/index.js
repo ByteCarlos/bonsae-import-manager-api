@@ -12,7 +12,7 @@ const app = express();
 const db = DB.new();
 await db.connect();
 const server = createServer(app);
-const whitelist = ['http://localhost:3005', 'https://entrega-web.netlify.app', 'https://motumbrasil.com'];
+const whitelist = ['http://localhost:3005', 'http://localhost:5173', 'https://bonsae-import-manager-web.vercel.app'];
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {

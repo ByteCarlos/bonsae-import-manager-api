@@ -8,8 +8,8 @@ import {
   ManyToOne,
   Unique,
 } from 'typeorm';
-import { UsersEntity } from './UsersEntity';
-import { DisciplinesEntity } from './DisciplinesEntity';
+import { UsersEntity } from './UsersEntity.js';
+import { DisciplinesEntity } from './DisciplinesEntity.js';
 
 @Entity({ name: 'discipline_users' })
 @Unique('unique_discipline', ['user', 'discipline'])

@@ -8,8 +8,8 @@ import {
   ManyToOne,
   Unique,
 } from 'typeorm';
-import { SchoolPeriodEntity } from './SchoolPeriodEntity';
-import { CampusEntity } from './CampusEntity';
+import { SchoolPeriodEntity } from './SchoolPeriodEntity.js';
+import { CampusEntity } from './CampusEntity.js';
 
 @Entity({ name: 'academic_classes' })
 @Unique('unique_academic_classes', ['code'])

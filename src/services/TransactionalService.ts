@@ -1,15 +1,15 @@
-import { ProcessDto } from "../dtos/ProcessDto";
-import { ClassDtoData } from "../dtos/ClassDto";
-import { EnrollmentDtoData } from "../dtos/EnrollmentDto";
-import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto";
-import { SubjectDtoData } from "../dtos/SubjectDto";
-import { UserDtoData, UserProfileMap } from "../dtos/UserDto";
-import { AcademicClassesEntity } from "../models/entities/AcademicClassesEntity";
-import { CampusEntity } from "../models/entities/CampusEntity";
-import { DisciplinesEntity } from "../models/entities/DisciplinesEntity";
-import { DisciplineUsersEntity } from "../models/entities/DisciplineUsersEntity";
-import { SchoolPeriodEntity } from "../models/entities/SchoolPeriodEntity";
-import { UsersEntity } from "../models/entities/UsersEntity";
+import { ProcessDto } from "../dtos/ProcessDto.js";
+import { ClassDtoData } from "../dtos/ClassDto.js";
+import { EnrollmentDtoData } from "../dtos/EnrollmentDto.js";
+import { SchoolPeriodDtoData } from "../dtos/SchoolPeriodDto.js";
+import { SubjectDtoData } from "../dtos/SubjectDto.js";
+import { UserDtoData, UserProfileMap } from "../dtos/UserDto.js";
+import { AcademicClassesEntity } from "../models/entities/AcademicClassesEntity.js";
+import { CampusEntity } from "../models/entities/CampusEntity.js";
+import { DisciplinesEntity } from "../models/entities/DisciplinesEntity.js";
+import { DisciplineUsersEntity } from "../models/entities/DisciplineUsersEntity.js";
+import { SchoolPeriodEntity } from "../models/entities/SchoolPeriodEntity.js";
+import { UsersEntity } from "../models/entities/UsersEntity.js";
 import { DataSource, EntityManager } from "typeorm";
 
 export class TransactionalService {

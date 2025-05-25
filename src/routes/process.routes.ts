@@ -1,6 +1,6 @@
 import { Router } from "express";
-import ProcessController from "../controllers/ProcessController";
-import asyncHandler from "../utils/asyncHandler";
+import ProcessController from "../controllers/ProcessController.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 const router = Router();
 
