@@ -1,0 +1,102 @@
+import SchoolPeriodDocument from '../models/documents/SchoolPeriodDocument.js';
+import ClassDocument from '../models/documents/ClassDocument.js';
+import UserDocument from '../models/documents/UserDocument.js';
+import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
+import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
+import SubjectDocument from '../models/documents/SubjectDocument.js';
+import { TransactionalService } from '../services/TransactionalService.js';
+import { DocumentService } from '../services/DocumentService.js';
+import { AppDataSource } from '../connection/mysqlConnection.js';
+export default {
+    async saveDocumentsToTransactionalDatabase(req, res) {
+        try {
+            const processId = req.params.id;
+            const documentService = new DocumentService();
+            const processData = await documentService.bundleProcessData(processId);
+            if (!processData) {
+                return res.status(404).json({ error: `Data not found for process: ${processId}` });
+            }
+            const transactionalService = new TransactionalService(AppDataSource);
+            const processEntities = await transactionalService.completeImport(processData);
+            return res.status(200).json(processEntities);
+        }
+        catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    },
+    async saveData(req, res) {
+        try {
+            const studentEnrollments = req.body.data.studentsEnrollments.map((studentEnrollment) => ({
+                ...studentEnrollment,
+                email: studentEnrollment.studentEmail,
+                professor: false,
+            }));
+            const professorEnrollments = req.body.data.professorEnrollments.map((professorEnrollment) => ({
+                ...professorEnrollment,
+                email: professorEnrollment.professorEmail,
+                professor: true,
+            }));
+            const enrollments = [...studentEnrollments, ...professorEnrollments];
+            const processData = req.body.data;
+            processData.enrollments = enrollments;
+            const transactionalService = new TransactionalService(AppDataSource);
+            const processEntities = await transactionalService.completeImport(processData);
+            return res.status(201).json(processEntities);
+        }
+        catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    },
+    async import(req, res) {
+        try {
+            const { data } = req.body.data;
+            let schoolPeriods = [];
+            let subjects = [];
+            let classes = [];
+            let users = [];
+            let professorEnrollments = [];
+            let studentEnrollments = [];
+            data.forEach((step) => {
+                switch (step.type) {
+                    case 'school_period':
+                        schoolPeriods = step.data.map((schoolPeriod) => new SchoolPeriodDocument(schoolPeriod));
+                        break;
+                    case 'subject':
+                        subjects = step.data.map((subject) => new SubjectDocument(subject));
+                        break;
+                    case 'class':
+                        classes = step.data.map((classData) => new ClassDocument(classData));
+                        break;
+                    case 'user':
+                        users = step.data.map((user) => new UserDocument(user));
+                        break;
+                    case 'professor_enrollment':
+                        professorEnrollments = step.data.map((enrollment) => new ProfessorEnrollmentDocument(enrollment));
+                        break;
+                    case 'student_enrollment':
+                        studentEnrollments = step.data.map((enrollment) => new StudentEnrollmentDocument(enrollment));
+                        break;
+                }
+            });
+            const schoolPeriodsDocs = schoolPeriods.length ? await SchoolPeriodDocument.insertMany(schoolPeriods) : [];
+            const subjectDocs = subjects.length ? await SubjectDocument.insertMany(subjects) : [];
+            const classDocs = classes.length ? await ClassDocument.insertMany(classes) : [];
+            const userDocs = users.length ? await UserDocument.insertMany(users) : [];
+            const professorEnrollmentsDocs = professorEnrollments.length ? await ProfessorEnrollmentDocument.insertMany(professorEnrollments) : [];
+            const studentEnrollmentsDocs = studentEnrollments.length ? await StudentEnrollmentDocument.insertMany(studentEnrollments) : [];
+            return res.status(201).json({
+                message: 'Dados importados com sucesso!',
+                schoolPeriods: schoolPeriodsDocs,
+                subjects: subjectDocs,
+                classes: classDocs,
+                users: userDocs,
+                professorEnrollments: professorEnrollmentsDocs,
+                studentEnrollments: studentEnrollmentsDocs
+            });
+        }
+        catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+};
+//# sourceMappingURL=ImportController.js.map
