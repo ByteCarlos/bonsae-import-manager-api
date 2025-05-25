@@ -1,4 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import { swaggerPaths } from './docs/swaggerPaths';
 
 const options = {
   definition: {
@@ -14,6 +15,7 @@ const options = {
         description: 'Servidor local',
       },
     ],
+    paths: swaggerPaths,
     components: {
       schemas: {
         ClassDocument: {
