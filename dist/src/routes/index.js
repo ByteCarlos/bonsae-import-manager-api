@@ -19,10 +19,10 @@ routes.use('/user', UserRoutes);
 routes.use('/import', ImportRoutes);
 routes.use('/process', ProcessRoutes);
 routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    customCssUrl: '../../public/swagger-ui.css',
+    customCssUrl: '/swagger/swagger-ui.css',
     customJs: [
-        '../../public/swagger-ui-bundle.js',
-        '../../public/swagger-ui-standalone-preset.js'
+        '/swagger/swagger-ui-bundle.js',
+        '/swagger/swagger-ui-standalone-preset.js'
     ]
 }));
 export default routes;
