@@ -26,7 +26,7 @@ export default {
         return res.status(409).json({ error: "Process already exists" });
       }
 
-      const created = await ProcessDocument.create({ processId, currentStatus: req.body.currentStatus });
+      const created = await ProcessDocument.create({ processId, currentStatus: req.body.currentStatus ?? 'INICIADO' });
       return res.status(201).json(created);
     } catch (error) {
       return res.status(500).json({ error: (error as Error).message });

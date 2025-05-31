@@ -59,19 +59,20 @@ export default {
     },
     async import(req: Request, res: Response) {
         try {
-            const data = req.body.data;
+            const { processId, schoolPeriod, subjects, classes, users, enrollments } = req.body;
+
             const process: ProcessDto = {
-                processId: data.processId,
-                schoolPeriod: data.schoolPeriod,
-                subjects: data.subjects,
-                classes: data.classes,
-                users: data.users,
-                enrollments: data.enrollments
-            }
+                processId: processId,
+                schoolPeriod: schoolPeriod,
+                subjects: subjects,
+                classes: classes,
+                users: users,
+                enrollments: enrollments
+            };
 
             const documentService = new DocumentService();
-            const processData = documentService.processAllInOne(process);
-            assert(processData, 'Error persisting imported data for process: ' + data.processId)
+            const processData = await documentService.processAllInOne(process);
+            assert(processData, 'Error persisting imported data for process: ' + processId)
 
             return res.status(201).json({
                 message: 'Dados importados com sucesso!',

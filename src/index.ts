@@ -18,7 +18,7 @@ await db.connect();
 const server: http.Server = createServer(app);
 
 // Configuração de CORS
-const whitelist: string[] = ['http://localhost:3005', 'http://localhost:5173', 'https://bonsae-import-manager-web.vercel.app'];
+const whitelist: string[] = ['http://localhost:3005', 'http://localhost:3333', 'http://localhost:5173', 'https://bonsae-import-manager-web.vercel.app'];
 
 const corsOptions = {
     origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {

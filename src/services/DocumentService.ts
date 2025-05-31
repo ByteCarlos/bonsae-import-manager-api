@@ -15,20 +15,22 @@ import UserDocument from "../models/documents/UserDocument.js";
 export class DocumentService {
   async bundleProcessData(processId: string): Promise<ProcessDto> {
     const [
-      schoolPeriods,
+      schoolPeriod,
       subjects,
       classes,
       users,
       professorEnrollments,
       studentEnrollments
     ] = await Promise.all([
-      SchoolPeriodDocument.findOne({ processId }),
+      SchoolPeriodDocument.findOne({ processId: processId }),
       SubjectDocument.find({ processId }),
       ClassDocument.find({ processId }),
       UserDocument.find({ processId }),
       ProfessorEnrollmentDocument.find({ processId }),
       StudentEnrollmentDocument.find({ processId })
     ]);
+
+    console.log(processId)
 
     const enrollments: EnrollmentDtoData[] = [
       ...professorEnrollments.map(enrollment => ({
@@ -49,7 +51,7 @@ export class DocumentService {
 
     return {
       processId,
-      schoolPeriod: schoolPeriods as SchoolPeriodDtoData,
+      schoolPeriod: schoolPeriod as SchoolPeriodDtoData,
       subjects: subjects as SubjectDtoData[],
       classes: classes as ClassDtoData[],
       users: users as UserDtoData[],

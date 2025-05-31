@@ -1,38 +1,162 @@
 export const swaggerPaths = {
-  /**
-   * Import
-   */
-  '/import/csv': {
-    post: {
-      summary: 'Importa dados de um CSV',
-      tags: ['Import'],
-      requestBody: {
-        required: true,
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              properties: {
-                data: {
-                  type: 'object',
-                  description: 'Estrutura contendo arrays de dados por tipo (school_period, subject, class, user, etc.)',
-                },
+/**
+ * Import
+ */
+'/import/csv': {
+  post: {
+    summary: 'Importa dados de um CSV',
+    tags: ['Import'],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              processId: {
+                type: 'string', example: 'process_2025_01' 
               },
+              schoolPeriod: {
+                type: 'object',
+                properties: {
+                  code: { type: 'string', example: '2025-1' },
+                  name: { type: 'string', example: '1º Semestre' },
+                  startDate: { type: 'string', format: 'date-time', example: '2025-02-01T00:00:00.000Z' },
+                  endDate: { type: 'string', format: 'date-time', example: '2025-06-30T00:00:00.000Z' }
+                },
+                required: ['code', 'startDate', 'endDate']
+              },
+              subjects: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    periodId: { type: 'string', example: '2025-1' },
+                    name: { type: 'string', example: 'Direito Constitucional' },
+                    code: { type: 'string', example: 'DCN001' },
+                    startDate: { type: 'string', format: 'date-time', example: '2025-02-10T00:00:00.000Z' },
+                    endDate: { type: 'string', format: 'date-time', example: '2025-06-15T00:00:00.000Z' },
+                    category: { type: 'string', example: 'CURSO' },
+                    period: { type: 'string', example: '2' },
+                    state: { type: 'integer', example: 1 },
+                    campus: { type: 'string', example: 'Campus Central' }
+                  },
+                  required: ['periodId', 'code', 'startDate', 'endDate', 'category']
+                }
+              },
+              classes: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    subjectCode: { type: 'string', example: 'DCN001' },
+                    shift: { type: 'string', example: 'MATUTINO' },
+                    name: { type: 'string', example: 'Turma A' },
+                    code: { type: 'string', example: 'TURMA_A' }
+                  },
+                  required: ['subjectCode', 'name', 'code']
+                }
+              },
+              users: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    profileId: { type: 'string', example: 'Aluno(a)' },
+                    name: { type: 'string', example: 'Maria Silva' },
+                    email: { type: 'string', format: 'email', example: 'maria.silva@example.com' },
+                    cpf: { type: 'string', example: '12345678900' },
+                    password: { type: 'string', example: 'senhaSegura123' },
+                    registrationNumber: { type: 'string', example: '202512345' },
+                    telephone: { type: 'string', example: '(11) 99999-0000' },
+                    periodId: { type: 'integer', example: 2 },
+                    observations: { type: 'string', example: 'Estudante bolsista' }
+                  },
+                  required: ['profileId', 'name', 'email', 'cpf', 'password']
+                }
+              },
+              enrollments: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    subjectCode: { type: 'string', example: 'DCN001' },
+                    classCode: { type: 'string', example: 'TURMA_A' },
+                    registrationNumber: { type: 'string', example: '202512345' },
+                    email: { type: 'string', format: 'email', example: 'maria.silva@example.com' },
+                    professor: { type: 'boolean', example: false }
+                  },
+                  required: ['subjectCode', 'classCode', 'professor']
+                }
+              }
             },
+            required: ['processId', 'schoolPeriod', 'subjects', 'classes', 'users', 'enrollments']
           },
-        },
-      },
-      responses: {
-        201: {
-          description: 'Dados importados com sucesso',
-        },
-        500: {
-          description: 'Erro ao importar dados',
-        },
-      },
+          example: {
+            processId: 'process_2025_01',
+            schoolPeriod: {
+              code: '2025-1',
+              name: '1º Semestre',
+              startDate: '2025-02-01T00:00:00.000Z',
+              endDate: '2025-06-30T00:00:00.000Z'
+            },
+            subjects: [
+              {
+                periodId: '2025-1',
+                name: 'Direito Constitucional',
+                code: 'DCN001',
+                startDate: '2025-02-10T00:00:00.000Z',
+                endDate: '2025-06-15T00:00:00.000Z',
+                category: 'CURSO',
+                period: '2',
+                state: 1,
+                campus: 'Campus Central'
+              }
+            ],
+            classes: [
+              {
+                subjectCode: 'DCN001',
+                shift: 'MATUTINO',
+                name: 'Turma A',
+                code: 'TURMA_A'
+              }
+            ],
+            users: [
+              {
+                profileId: 'Aluno(a)',
+                name: 'Maria Silva',
+                email: 'maria.silva@example.com',
+                cpf: '12345678900',
+                password: 'senhaSegura123',
+                registrationNumber: '202512345',
+                telephone: '(11) 99999-0000',
+                periodId: 2,
+                observations: 'Estudante bolsista'
+              }
+            ],
+            enrollments: [
+              {
+                subjectCode: 'DCN001',
+                classCode: 'TURMA_A',
+                registrationNumber: '202512345',
+                email: 'maria.silva@example.com',
+                professor: false
+              }
+            ]
+          }
+        }
+      }
     },
+    responses: {
+      201: {
+        description: 'Dados importados com sucesso'
+      },
+      500: {
+        description: 'Erro ao importar dados'
+      }
+    }
+  }
   },
-
   // Salva dados processados diretamente no banco transacional
   '/import/save': {
     post: {
@@ -75,7 +199,7 @@ export const swaggerPaths = {
   },
 
   // Salva todos os dados de um processo previamente importado no banco relacional (por ID)
-  '/import/save/:id': {
+  '/import/save-documents/:id': {
     post: {
       summary: 'Salva no banco transacional os dados associados a um processo',
       tags: ['Import'],
