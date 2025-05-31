@@ -21,6 +21,12 @@ routes.use('/subject', SubjectRoutes);
 routes.use('/user', UserRoutes);
 routes.use('/import', ImportRoutes);
 routes.use('/process', ProcessRoutes);
-routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCssUrl: '/swagger/swagger-ui.css',
+  customJs: [
+    '/swagger/swagger-ui-bundle.js',
+    '/swagger/swagger-ui-standalone-preset.js'
+  ]
+}));
 
 export default routes;
