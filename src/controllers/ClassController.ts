@@ -104,19 +104,19 @@ export default {
 
     async update(req: Request, res: Response) {
         try {
-            const { processId, subjectCode, ...data } = req.body;
+            const { processId, subjectCode, row } = req.body;
 
             if (subjectCode) {
                 const subject = await SubjectDocument.findOne({ code: subjectCode, processId: processId });
                 if (!subject) return res.status(404).json({ error: 'Subject not found' });
 
-                data.subjectCode = subjectCode;
-                data.subjectRef = subject._id;
+                row.subjectCode = subjectCode;
+                row.subjectRef = subject._id;
             }
 
             const updatedClass = await ClassDocument.findOneAndUpdate(
                 { code: req.params.id, processId: processId },
-                data,
+                row,
                 { new: true, runValidators: true }
             );
             if (!updatedClass) return res.status(404).json({ error: 'Class not found' });

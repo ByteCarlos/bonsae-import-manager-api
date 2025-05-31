@@ -38,6 +38,7 @@ export default {
         try {
             const { processId } = req.body;
             const schoolPeriodData = req.body.data;
+            console.log(req.body);
 
             const existingPeriod = await SchoolPeriodDocument.findOne({ code: schoolPeriodData.code, processId });
             if (existingPeriod) {

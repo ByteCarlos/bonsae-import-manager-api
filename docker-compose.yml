@@ -7,10 +7,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=pass
-    command: ["mongod", "--replSet", "rs0"]
     ports:
       - "27017:27017"
-    restart: always
 
   mysql-container:
     image: mysql:latest
@@ -20,5 +18,3 @@ services:
       MYSQL_DATABASE: bonsae-import
     ports:
       - "3306:3306"
-    volumes:
-      - ./init:/docker-entrypoint-initdb.d

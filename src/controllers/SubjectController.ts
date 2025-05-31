@@ -101,21 +101,24 @@ export default {
     },
     async update(req: Request, res: Response) {
         try {
-            const { processId, periodId, ...data } = req.body;
+            const { processId, periodId, row } = req.body;
 
+            console.log(req.body)
             if (periodId) {
                 const schoolPeriod = await SchoolPeriodDocument.findOne({ code: periodId, processId: processId });
                 if (!schoolPeriod) return res.status(404).json({ error: 'SchoolPeriod not found' });
 
-                data.periodId = periodId;
-                data.schoolPeriodRef = schoolPeriod._id;
+                row.periodId = periodId;
+                row.schoolPeriodRef = schoolPeriod._id;
             }
 
+            console.log(req.params.id, processId);
             const updatedSubject = await SubjectDocument.findOneAndUpdate(
                 { code: req.params.id, processId: processId },
-                data,
+                row,
                 { new: true, runValidators: true }
             );
+            console.log(updatedSubject);
             if (!updatedSubject) return res.status(404).json({ error: 'Subject not found' });
 
             if (updatedSubject.code != req.params.id) {

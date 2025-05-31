@@ -21,7 +21,7 @@ export class TransactionalService {
         await queryRunner.startTransaction();
 
         try {
-            const schoolPeriods = await this.saveSchoolPeriods(processData.schoolPeriods, queryRunner.manager);
+            const schoolPeriods = await this.saveSchoolPeriod(processData.schoolPeriod, queryRunner.manager);
             const academicClasses = await this.saveAcademicClasses(processData.subjects, queryRunner.manager);
             const disciplines = await this.saveDisciplines(processData.classes, queryRunner.manager);
             const users =  await this.saveUsers(processData.users, queryRunner.manager);
@@ -45,30 +45,27 @@ export class TransactionalService {
         }
     }
     
-    private async saveSchoolPeriods(
-        schoolPeriods: SchoolPeriodDtoData[],
+    private async saveSchoolPeriod(
+        schoolPeriod: SchoolPeriodDtoData,
         manager: EntityManager
-    ): Promise<SchoolPeriodEntity[]> {
-        const entities = await Promise.all(
-            schoolPeriods.map(async (entry) => {
-            let entity = await manager.findOne(SchoolPeriodEntity, { where: { code: entry.code } });
-            if (entity) {
-                return entity;
-            }
+    ): Promise<SchoolPeriodEntity> {
+        let entity = await manager.findOne(SchoolPeriodEntity, {
+            where: { code: schoolPeriod.code },
+        });
 
-            entity = new SchoolPeriodEntity();
-            Object.assign(entity, {
-                code: entry.code,
-                name: entry.name,
-                startDate: entry.startDate,
-                endDate: entry.endDate,
-            });
+        if (entity) {
+            return entity;
+        }
 
-            return manager.save(SchoolPeriodEntity, entity);
-            })
-        );
+        entity = new SchoolPeriodEntity();
+        Object.assign(entity, {
+            code: schoolPeriod.code,
+            name: schoolPeriod.name,
+            startDate: schoolPeriod.startDate,
+            endDate: schoolPeriod.endDate,
+        });
 
-        return entities;
+        return manager.save(SchoolPeriodEntity, entity);
     }
     
     private async findOrCreateCampus(

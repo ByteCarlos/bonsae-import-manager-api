@@ -26,7 +26,7 @@ export default {
         return res.status(409).json({ error: "Process already exists" });
       }
 
-      const created = await ProcessDocument.create({ processId });
+      const created = await ProcessDocument.create({ processId, currentStatus: req.body.currentStatus });
       return res.status(201).json(created);
     } catch (error) {
       return res.status(500).json({ error: (error as Error).message });
@@ -42,14 +42,38 @@ export default {
       }
 
       const process = await ProcessDocument.findOne({ processId });
-
       if (!process) {
         return res.status(404).json({ error: "Process not found" });
       }
 
-      return res.status(200).json(process);
-    } catch (error) {
-      return res.status(500).json({ error: (error as Error).message });
+      const [
+        professorEnrollments,
+        studentEnrollments,
+        users,
+        classes,
+        subjects,
+        schoolPeriod
+      ] = await Promise.all([
+        ProfessorEnrollmentDocument.find({ processId }),
+        StudentEnrollmentDocument.find({ processId }),
+        UserDocument.find({ processId }),
+        ClassDocument.find({ processId }),
+        SubjectDocument.find({ processId }),
+        SchoolPeriodDocument.findOne({ processId })
+      ]);
+
+      return res.status(200).json({
+        process,
+        professorEnrollments,
+        studentEnrollments,
+        users,
+        classes,
+        subjects,
+        schoolPeriod
+      });
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : "Unknown error";
+      return res.status(500).json({ error: errMsg });
     }
   },
 
@@ -100,13 +124,23 @@ export default {
 
   async getAllProcesses(_req: Request, res: Response) {
     try {
-      const processes = await ProcessDocument.find();
+      const processDocs = await ProcessDocument.find();
 
-      if (!processes) {
-        return res.status(404).json({ error: "No process found" });
+      if (!processDocs || processDocs.length === 0) {
+        return res.status(404).json({ error: "No processes found" });
       }
 
-      return res.status(200).json(processes);
+      const processesWithPeriods = await Promise.all(
+        processDocs.map(async (process) => {
+          const schoolPeriod = await SchoolPeriodDocument.findOne({ processId: process.processId });
+          return {
+            process,
+            schoolPeriod
+          };
+        })
+      );
+
+      return res.status(200).json(processesWithPeriods);
     } catch (error) {
       return res.status(500).json({ error: (error as Error).message });
     }
@@ -134,6 +168,78 @@ export default {
     }
   },
   */
+
+  async updateProcessPart(req: Request, res: Response): Promise<Response> {
+    try {
+      const { processId, model } = req.params;
+      const updateData = req.body;
+
+      if (!processId || !model) {
+        return res.status(400).json({ error: "Missing required URL parameters" });
+      }
+
+      if (!allowedModels.includes(model)) {
+        return res.status(400).json({ error: `Model '${model}' is not allowed.` });
+      }
+
+      const Model = mongoose.model(model);
+      const existingDocs = await Model.find({ processId });
+
+      if (updateData.periodId) {
+        const schoolPeriod = await mongoose.model('School_Period').findOne({ periodId: updateData.periodId });
+        if (!schoolPeriod) {
+          return res.status(400).json({ error: `No School_Period found with periodId '${updateData.periodId}'` });
+        }
+        updateData.schoolPeriodRef = schoolPeriod._id;
+      }
+
+      const result = await Model.updateMany({ processId }, updateData, { runValidators: true });
+
+      if (model === 'Subject' && updateData.code) {
+        for (const doc of existingDocs) {
+          await mongoose.model('Class').updateMany(
+            { subjectCode: doc.code, processId },
+            { subjectCode: updateData.code }
+          );
+        }
+      }
+
+      const updatedProcess = await mongoose.model('Process').findOneAndUpdate(
+        { processId },
+        updateData,
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedProcess) {
+        return res.status(404).json({ error: 'Process not found' });
+      }
+
+      return res.status(200).json({ updated: result.modifiedCount, updatedProcess });
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  },
+
+  async updateStatus(req: Request, res: Response): Promise<Response> {
+    try {
+      const { processId } = req.params;
+      const updateData = req.body;
+
+      const updatedProcess = await ProcessDocument.findOneAndUpdate(
+        { processId },
+        updateData,
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedProcess) {
+        return res.status(404).json({ error: 'Process not found' });
+      }
+
+      return res.status(200).json(updatedProcess);
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  },
 
   async destroy(req: Request, res: Response) {
     try {
