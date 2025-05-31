@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import UserDocument from '../models/documents/UserDocument.js';
 import ProcessDocument from '../models/documents/ProcessDocument.js';
-import { checkDuplicateUsers } from '../services/DocumentService.js';
 import ProfessorEnrollmentDocument from '../models/documents/ProfessorEnrollmentDocument.js';
 import StudentEnrollmentDocument from '../models/documents/StudentEnrollmentDocument.js';
 
@@ -15,15 +14,6 @@ export default {
             const processDoc = await ProcessDocument.findOne({ processId });
             if (!processDoc) {
                 return res.status(404).json({ error: "Process not found" });
-            }
-
-            const duplicateUsers = await checkDuplicateUsers(data, processId);
-
-            if (duplicateUsers.length > 0) {
-                return res.status(409).json({
-                    error: `The following users already exist in the process: ${processId}`,
-                    duplicates: duplicateUsers
-                });
             }
 
             const users = data.map(user => new UserDocument({

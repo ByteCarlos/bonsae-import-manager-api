@@ -23,13 +23,14 @@ export default {
             const enrollments = await Promise.all(
                 req.body.data.map(async (entry: StudentEnrollmentDtoData) => {
                     const [subject, classDoc, user] = await Promise.all([
-                        SubjectDocument.findOne({ code: entry.subjectCode }),
-                        ClassDocument.findOne({ code: entry.classCode }),
+                        SubjectDocument.findOne({ code: entry.subjectCode, processId }),
+                        ClassDocument.findOne({ code: entry.classCode, processId }),
                         UserDocument.findOne({
                             $or: [
                                 { email: entry.studentEmail },
                                 { registrationNumber: entry.registrationNumber }
-                            ]
+                            ],
+                            processId
                         })
                     ]);
             
@@ -74,7 +75,8 @@ export default {
                 subjectCode: enrollmentData.subjectCode, 
                 classCode: enrollmentData.classCode, 
                 registrationNumber: enrollmentData.registrationNumber, 
-                studentEmail: enrollmentData.studentEmail 
+                studentEmail: enrollmentData.studentEmail,
+                processId
             });
             if (existingEnrollment) {
                 return res.status(409).json({ error: `Enrollment already created in this process`, enrollment: existingEnrollment });
@@ -89,13 +91,14 @@ export default {
 
             const enrollment = new StudentEnrollmentDocument(enrollmentData);
             const [subject, classDoc, user] = await Promise.all([
-                SubjectDocument.findOne({ code: enrollment.subjectCode }),
-                ClassDocument.findOne({ code: enrollment.classCode }),
+                SubjectDocument.findOne({ code: enrollment.subjectCode, processId }),
+                ClassDocument.findOne({ code: enrollment.classCode, processId }),
                 UserDocument.findOne({
                     $or: [
                         { email: enrollment.studentEmail },
                         { registrationNumber: enrollment.registrationNumber }
-                    ]
+                    ],
+                    processId
                 })
             ]);
 
@@ -135,7 +138,7 @@ export default {
 
             let enrollment;
             if (req.params.id) {
-                enrollment = await StudentEnrollmentDocument.findOne({ processId: req.body.processId, _id: req.params.id });
+                enrollment = await StudentEnrollmentDocument.findOne({ processId: data.processId, _id: req.params.id });
                 return res.status(200).json(enrollment);
             }
 

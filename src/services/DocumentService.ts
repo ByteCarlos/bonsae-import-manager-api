@@ -231,23 +231,3 @@ export class DocumentService {
     );
   }
 }
-
-export async function checkDuplicateUsers(data: UserDtoData[], processId: string) {
-  const duplicates = await Promise.all(
-    data.map(user =>
-      UserDocument.findOne({ profileId: user.profileId, name: user.name, processId })
-    )
-  );
-
-  return data
-    .map((user, index) => {
-      if (duplicates[index]) {
-        return {
-          profileId: user.profileId,
-          name: user.name
-        };
-      }
-      return null;
-    })
-    .filter(Boolean);
-}
