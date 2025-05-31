@@ -1,4 +1,3 @@
-import { error } from "console";
 import { ClassDtoData } from "../dtos/ClassDto.js";
 import { EnrollmentDtoData } from "../dtos/EnrollmentDto.js";
 import { ProcessDto } from "../dtos/ProcessDto.js";
