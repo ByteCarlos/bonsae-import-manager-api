@@ -12,7 +12,7 @@ export interface SchoolPeriodDto {
 }
 export interface SchoolPeriodDtoData {
     code: string;
-    name: Period;
+    name?: Period;
     startDate: Date;
     endDate: Date;
 }

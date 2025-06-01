@@ -16,13 +16,14 @@ export default {
             }
             const enrollments = await Promise.all(req.body.data.map(async (entry) => {
                 const [subject, classDoc, user] = await Promise.all([
-                    SubjectDocument.findOne({ code: entry.subjectCode }),
-                    ClassDocument.findOne({ code: entry.classCode }),
+                    SubjectDocument.findOne({ code: entry.subjectCode, processId }),
+                    ClassDocument.findOne({ code: entry.classCode, processId }),
                     UserDocument.findOne({
                         $or: [
                             { email: entry.professorEmail },
                             { registrationNumber: entry.registrationNumber }
-                        ]
+                        ],
+                        processId
                     })
                 ]);
                 if (!subject) {
@@ -59,7 +60,8 @@ export default {
                 subjectCode: enrollmentData.subjectCode,
                 classCode: enrollmentData.classCode,
                 registrationNumber: enrollmentData.registrationNumber,
-                professorEmail: enrollmentData.professorEmail
+                professorEmail: enrollmentData.professorEmail,
+                processId
             });
             if (existingEnrollment) {
                 return res.status(409).json({ error: `Enrollment already created in this process`, enrollment: existingEnrollment });
@@ -72,13 +74,14 @@ export default {
             enrollmentData.processRef = process;
             const enrollment = new ProfessorEnrollmentDocument(enrollmentData);
             const [subject, classDoc, user] = await Promise.all([
-                SubjectDocument.findOne({ code: enrollment.subjectCode }),
-                ClassDocument.findOne({ code: enrollment.classCode }),
+                SubjectDocument.findOne({ code: enrollment.subjectCode, processId }),
+                ClassDocument.findOne({ code: enrollment.classCode, processId }),
                 UserDocument.findOne({
                     $or: [
                         { email: enrollment.professorEmail },
                         { registrationNumber: enrollment.registrationNumber }
-                    ]
+                    ],
+                    processId
                 })
             ]);
             if (!subject) {

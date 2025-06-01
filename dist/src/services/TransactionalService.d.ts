@@ -9,13 +9,13 @@ export declare class TransactionalService {
     private readonly dataSource;
     constructor(dataSource: DataSource);
     completeImport(processData: ProcessDto): Promise<{
-        schoolPeriodsEntities: SchoolPeriodEntity[];
+        schoolPeriodsEntities: SchoolPeriodEntity;
         academicClassesEntities: AcademicClassesEntity[];
         disciplinesEntities: DisciplinesEntity[];
         usersEntities: UsersEntity[];
         disciplineUsersEntities: DisciplineUsersEntity[];
     }>;
-    private saveSchoolPeriods;
+    private saveSchoolPeriod;
     private findOrCreateCampus;
     private saveAcademicClasses;
     private saveDisciplines;

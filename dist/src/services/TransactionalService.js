@@ -14,7 +14,7 @@ export class TransactionalService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const schoolPeriods = await this.saveSchoolPeriods(processData.schoolPeriods, queryRunner.manager);
+            const schoolPeriods = await this.saveSchoolPeriod(processData.schoolPeriod, queryRunner.manager);
             const academicClasses = await this.saveAcademicClasses(processData.subjects, queryRunner.manager);
             const disciplines = await this.saveDisciplines(processData.classes, queryRunner.manager);
             const users = await this.saveUsers(processData.users, queryRunner.manager);
@@ -37,22 +37,21 @@ export class TransactionalService {
             await queryRunner.release();
         }
     }
-    async saveSchoolPeriods(schoolPeriods, manager) {
-        const entities = await Promise.all(schoolPeriods.map(async (entry) => {
-            let entity = await manager.findOne(SchoolPeriodEntity, { where: { code: entry.code } });
-            if (entity) {
-                return entity;
-            }
-            entity = new SchoolPeriodEntity();
-            Object.assign(entity, {
-                code: entry.code,
-                name: entry.name,
-                startDate: entry.startDate,
-                endDate: entry.endDate,
-            });
-            return manager.save(SchoolPeriodEntity, entity);
-        }));
-        return entities;
+    async saveSchoolPeriod(schoolPeriod, manager) {
+        let entity = await manager.findOne(SchoolPeriodEntity, {
+            where: { code: schoolPeriod.code },
+        });
+        if (entity) {
+            return entity;
+        }
+        entity = new SchoolPeriodEntity();
+        Object.assign(entity, {
+            code: schoolPeriod.code,
+            name: schoolPeriod.name,
+            startDate: schoolPeriod.startDate,
+            endDate: schoolPeriod.endDate,
+        });
+        return manager.save(SchoolPeriodEntity, entity);
     }
     async findOrCreateCampus(campusName, manager) {
         let campus = await manager.findOne(CampusEntity, { where: { name: campusName } });

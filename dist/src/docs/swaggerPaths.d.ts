@@ -13,11 +13,228 @@ export declare const swaggerPaths: {
                         schema: {
                             type: string;
                             properties: {
-                                data: {
+                                processId: {
                                     type: string;
-                                    description: string;
+                                    example: string;
+                                };
+                                schoolPeriod: {
+                                    type: string;
+                                    properties: {
+                                        code: {
+                                            type: string;
+                                            example: string;
+                                        };
+                                        name: {
+                                            type: string;
+                                            example: string;
+                                        };
+                                        startDate: {
+                                            type: string;
+                                            format: string;
+                                            example: string;
+                                        };
+                                        endDate: {
+                                            type: string;
+                                            format: string;
+                                            example: string;
+                                        };
+                                    };
+                                    required: string[];
+                                };
+                                subjects: {
+                                    type: string;
+                                    items: {
+                                        type: string;
+                                        properties: {
+                                            periodId: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            name: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            code: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            startDate: {
+                                                type: string;
+                                                format: string;
+                                                example: string;
+                                            };
+                                            endDate: {
+                                                type: string;
+                                                format: string;
+                                                example: string;
+                                            };
+                                            category: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            period: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            state: {
+                                                type: string;
+                                                example: number;
+                                            };
+                                            campus: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                        };
+                                        required: string[];
+                                    };
+                                };
+                                classes: {
+                                    type: string;
+                                    items: {
+                                        type: string;
+                                        properties: {
+                                            subjectCode: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            shift: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            name: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            code: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                        };
+                                        required: string[];
+                                    };
+                                };
+                                users: {
+                                    type: string;
+                                    items: {
+                                        type: string;
+                                        properties: {
+                                            profileId: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            name: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            email: {
+                                                type: string;
+                                                format: string;
+                                                example: string;
+                                            };
+                                            cpf: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            password: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            registrationNumber: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            telephone: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            periodId: {
+                                                type: string;
+                                                example: number;
+                                            };
+                                            observations: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                        };
+                                        required: string[];
+                                    };
+                                };
+                                enrollments: {
+                                    type: string;
+                                    items: {
+                                        type: string;
+                                        properties: {
+                                            subjectCode: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            classCode: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            registrationNumber: {
+                                                type: string;
+                                                example: string;
+                                            };
+                                            email: {
+                                                type: string;
+                                                format: string;
+                                                example: string;
+                                            };
+                                            professor: {
+                                                type: string;
+                                                example: boolean;
+                                            };
+                                        };
+                                        required: string[];
+                                    };
                                 };
                             };
+                            required: string[];
+                        };
+                        example: {
+                            processId: string;
+                            schoolPeriod: {
+                                code: string;
+                                name: string;
+                                startDate: string;
+                                endDate: string;
+                            };
+                            subjects: {
+                                periodId: string;
+                                name: string;
+                                code: string;
+                                startDate: string;
+                                endDate: string;
+                                category: string;
+                                period: string;
+                                state: number;
+                                campus: string;
+                            }[];
+                            classes: {
+                                subjectCode: string;
+                                shift: string;
+                                name: string;
+                                code: string;
+                            }[];
+                            users: {
+                                profileId: string;
+                                name: string;
+                                email: string;
+                                cpf: string;
+                                password: string;
+                                registrationNumber: string;
+                                telephone: string;
+                                periodId: number;
+                                observations: string;
+                            }[];
+                            enrollments: {
+                                subjectCode: string;
+                                classCode: string;
+                                registrationNumber: string;
+                                email: string;
+                                professor: boolean;
+                            }[];
                         };
                     };
                 };
@@ -75,7 +292,7 @@ export declare const swaggerPaths: {
             };
         };
     };
-    '/import/save/:id': {
+    '/import/save-documents/:id': {
         post: {
             summary: string;
             tags: string[];

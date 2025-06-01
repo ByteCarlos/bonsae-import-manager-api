@@ -31,6 +31,7 @@ export default {
         try {
             const { processId } = req.body;
             const schoolPeriodData = req.body.data;
+            console.log(req.body);
             const existingPeriod = await SchoolPeriodDocument.findOne({ code: schoolPeriodData.code, processId });
             if (existingPeriod) {
                 return res.status(409).json({ error: `School period ${schoolPeriodData.code} already created in this process` });

@@ -1,38 +1,26 @@
 import mongoose from "mongoose";
 declare const _default: mongoose.Model<{
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 }, {}> & {
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 } & {
     _id: mongoose.Types.ObjectId;
 } & {
     __v: number;
 }, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 }>, {}> & mongoose.FlatRecord<{
     processId: string;
-    startDate: NativeDate;
-    endDate: NativeDate;
-    schoolPeriod: string;
+    currentStatus?: string | null | undefined;
 }> & {
     _id: mongoose.Types.ObjectId;
 } & {

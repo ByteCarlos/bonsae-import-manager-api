@@ -2,7 +2,7 @@ import mongoose, { Schema, model } from 'mongoose';
 import { Period } from '../../dtos/SchoolPeriodDto.js';
 const SchoolPeriodSchema = new Schema({
     code: { type: String, required: true },
-    name: { type: String, enum: Period, required: true },
+    name: { type: String, enum: Period, required: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     processId: { type: String, required: true },
