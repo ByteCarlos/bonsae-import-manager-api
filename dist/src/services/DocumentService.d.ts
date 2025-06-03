@@ -14,16 +14,16 @@ export declare class DocumentService {
             __v: number;
         };
         periodDoc: import("mongoose").Document<unknown, {}, {
+            code: string;
             processId: string;
             processRef: import("mongoose").Types.ObjectId;
-            code: string;
             startDate: NativeDate;
             endDate: NativeDate;
             name?: string | null | undefined;
         }, {}> & {
+            code: string;
             processId: string;
             processRef: import("mongoose").Types.ObjectId;
-            code: string;
             startDate: NativeDate;
             endDate: NativeDate;
             name?: string | null | undefined;
@@ -33,10 +33,10 @@ export declare class DocumentService {
             __v: number;
         };
         subjectDocList: (import("mongoose").Document<unknown, {}, {
+            code: string;
             processId: string;
             processRef: import("mongoose").Types.ObjectId;
             periodId: string;
-            code: string;
             startDate: NativeDate;
             endDate: NativeDate;
             category: "CURSO" | "NPJ" | "PROJETOS_EXTENSIONISTAS" | "TCC";
@@ -46,10 +46,10 @@ export declare class DocumentService {
             state?: number | null | undefined;
             campus?: string | null | undefined;
         }, {}> & {
+            code: string;
             processId: string;
             processRef: import("mongoose").Types.ObjectId;
             periodId: string;
-            code: string;
             startDate: NativeDate;
             endDate: NativeDate;
             category: "CURSO" | "NPJ" | "PROJETOS_EXTENSIONISTAS" | "TCC";
@@ -64,20 +64,20 @@ export declare class DocumentService {
             __v: number;
         })[];
         classDocList: (import("mongoose").Document<unknown, {}, {
-            processId: string;
-            name: string;
             subjectCode: string;
+            name: string;
+            code: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
-            code: string;
             shift?: "MATUTINO" | "VESPERTINO" | "NOTURNO" | null | undefined;
         }, {}> & {
-            processId: string;
-            name: string;
             subjectCode: string;
+            name: string;
+            code: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
-            code: string;
             shift?: "MATUTINO" | "VESPERTINO" | "NOTURNO" | null | undefined;
         } & {
             _id: import("mongoose").Types.ObjectId;
@@ -85,34 +85,34 @@ export declare class DocumentService {
             __v: number;
         })[];
         userDocList: (import("mongoose").Document<unknown, {}, {
-            processId: string;
             name: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             profileId: string;
             email: string;
             cpf: string;
             password: string;
+            periodId?: number | null | undefined;
             registrationNumber?: string | null | undefined;
             subprofile?: string | null | undefined;
             oab?: string | null | undefined;
             oabUf?: string | null | undefined;
             telephone?: string | null | undefined;
-            periodId?: number | null | undefined;
             observations?: string | null | undefined;
         }, {}> & {
-            processId: string;
             name: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             profileId: string;
             email: string;
             cpf: string;
             password: string;
+            periodId?: number | null | undefined;
             registrationNumber?: string | null | undefined;
             subprofile?: string | null | undefined;
             oab?: string | null | undefined;
             oabUf?: string | null | undefined;
             telephone?: string | null | undefined;
-            periodId?: number | null | undefined;
             observations?: string | null | undefined;
         } & {
             _id: import("mongoose").Types.ObjectId;
@@ -120,21 +120,21 @@ export declare class DocumentService {
             __v: number;
         })[];
         enrollmentDocList: ((import("mongoose").Document<unknown, {}, {
-            processId: string;
             subjectCode: string;
-            classCode: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
+            classCode: string;
             classRef: import("mongoose").Types.ObjectId;
             userRef: import("mongoose").Types.ObjectId;
             registrationNumber?: string | null | undefined;
             professorEmail?: string | null | undefined;
         }, {}> & {
-            processId: string;
             subjectCode: string;
-            classCode: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
+            classCode: string;
             classRef: import("mongoose").Types.ObjectId;
             userRef: import("mongoose").Types.ObjectId;
             registrationNumber?: string | null | undefined;
@@ -144,21 +144,21 @@ export declare class DocumentService {
         } & {
             __v: number;
         }) | (import("mongoose").Document<unknown, {}, {
-            processId: string;
             subjectCode: string;
-            classCode: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
+            classCode: string;
             classRef: import("mongoose").Types.ObjectId;
             userRef: import("mongoose").Types.ObjectId;
             registrationNumber?: string | null | undefined;
             studentEmail?: string | null | undefined;
         }, {}> & {
-            processId: string;
             subjectCode: string;
-            classCode: string;
+            processId: string;
             processRef: import("mongoose").Types.ObjectId;
             subjectRef: import("mongoose").Types.ObjectId;
+            classCode: string;
             classRef: import("mongoose").Types.ObjectId;
             userRef: import("mongoose").Types.ObjectId;
             registrationNumber?: string | null | undefined;
