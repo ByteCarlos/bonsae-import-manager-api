@@ -11,6 +11,7 @@ import { DisciplineUsersEntity } from "../models/entities/DisciplineUsersEntity.
 import { SchoolPeriodEntity } from "../models/entities/SchoolPeriodEntity.js";
 import { UsersEntity } from "../models/entities/UsersEntity.js";
 import { DataSource, EntityManager } from "typeorm";
+import ProcessDocument from "../models/documents/ProcessDocument.js";
 
 export class TransactionalService {
     constructor(private readonly dataSource: DataSource) { }
@@ -27,7 +28,12 @@ export class TransactionalService {
             const users =  await this.saveUsers(processData.users, queryRunner.manager);
             const disciplineUsers = await this.saveDisciplineUsers(processData.enrollments, queryRunner.manager);
 
-            await queryRunner.commitTransaction();
+            await queryRunner.commitTransaction().then(async () => {
+                await ProcessDocument.findOneAndUpdate(
+                    { processId: processData.processId },
+                    { currentStatus: 'FINALIZADO' }
+                );
+            });
 
             return {
                 schoolPeriodsEntities: schoolPeriods,

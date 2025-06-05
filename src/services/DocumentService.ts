@@ -30,8 +30,6 @@ export class DocumentService {
       StudentEnrollmentDocument.find({ processId })
     ]);
 
-    console.log(processId)
-
     const enrollments: EnrollmentDtoData[] = [
       ...professorEnrollments.map(enrollment => ({
         subjectCode: enrollment.subjectCode,
@@ -49,7 +47,7 @@ export class DocumentService {
       }))
     ];
 
-    return {
+    const data = {
       processId,
       schoolPeriod: schoolPeriod as SchoolPeriodDtoData,
       subjects: subjects as SubjectDtoData[],
@@ -57,6 +55,8 @@ export class DocumentService {
       users: users as UserDtoData[],
       enrollments,
     };
+
+    return data;
   }
 
   async processAllInOne(data: ProcessDto) {
